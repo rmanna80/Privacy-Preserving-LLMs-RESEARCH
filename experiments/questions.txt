@@ -1,0 +1,5 @@
+What tax year is this return for?
+What is the filing status on this return?
+What schedules are mentioned in the documents?
+What is the total income reported?
+What is the standard deduction?
