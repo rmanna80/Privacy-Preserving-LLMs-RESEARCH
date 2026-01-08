@@ -14,6 +14,14 @@ from .llm_ollama import build_ollama_llm
 from .qa_chain import build_qa_chain
 from .privacy_policy import PrivacyPolicy, DisclosureMode
 
+from .sensitive_extractors import (
+    looks_like_ssn_question,
+    build_name_ssn_pairs_from_docs,
+    extract_ssns,
+    extract_requested_name,
+    best_name_match,
+)
+
 
 class FinancialQASystem:
     """
@@ -115,41 +123,72 @@ class FinancialQASystem:
         return docs
 
     def ask(
-        self,
-        question: str,
-        disclosure_mode: DisclosureMode = DisclosureMode.AUTHORIZED,
-        include_sources: bool = True,
+    self,
+    question: str,
+    disclosure_mode: DisclosureMode = DisclosureMode.AUTHORIZED,
+    include_sources: bool = True,
+    authorized: bool = False,
     ) -> str:
         """Answer a question using retrieval + local LLM, then enforce privacy policy."""
-        if self.qa_chain is None:
-            raise RuntimeError("QA chain not ready. Call index_documents() first.")
+        if self.vector_store is None or self.retriever is None:
+            raise RuntimeError("System not ready. Call index_documents() first.")
+
+        # For SSN questions: retrieve more context so we actually pull the page with the SSN
+        if looks_like_ssn_question(question):
+            sensitive_retriever = self.vector_store.as_retriever(search_kwargs={"k": 12})
+            source_docs = sensitive_retriever.invoke(question)
+
+            # Build mapping like {"JOHN SMITH": "111-11-1111", "SALLY SMITH": "222-22-2222"}
+            pairs = build_name_ssn_pairs_from_docs(source_docs)
+
+            requested = extract_requested_name(question)  # e.g. "SALLY SMITH" if user typed it
+
+            if requested:
+                matched = best_name_match(requested, list(pairs.keys()))
+                if matched and matched in pairs:
+                    answer = pairs[matched]
+                    grounded = True
+                else:
+                    answer = "I cannot find an SSN associated with that name in the retrieved context."
+                    grounded = False
+            else:
+                # user asked for "the SSN" without naming a person
+                if pairs:
+                    names = sorted(pairs.keys())
+                    answer = (
+                        "I found SSNs for the following names in the retrieved context:\n- "
+                        + "\n- ".join(names)
+                        + "\n\nPlease specify which person you want."
+                    )
+                    grounded = True
+                else:
+                    answer = "I cannot find an SSN in the retrieved context."
+                    grounded = False
+             # Normal QA path (LLM + retrieval)
+        else:
+            if self.qa_chain is None:
+                raise RuntimeError("QA chain not ready. Call index_documents() first.")
+        # Enforce privacy policy (authorization gate)
 
         result = self.qa_chain({"query": question})
         answer = result.get("result", "")
-        source_docs = result.get("source_documents", [])
-
+        source_docs = result.get("source_documents", []) or []
         grounded = len(source_docs) > 0
-
+        
         answer = PrivacyPolicy.enforce(
             text=answer,
             mode=disclosure_mode,
             grounded=grounded,
+            authorized=authorized,
         )
 
-        # Create sources for trace + optional printing
-        sources = []
-        for d in source_docs:
-            sources.append(
-                {
-                    "source": d.metadata.get("source"),
-                    "page": d.metadata.get("page"),
-                }
-            )
+        # Sources for trace + optional printing
+        sources = [{"source": d.metadata.get("source"), "page": d.metadata.get("page")} for d in source_docs]
 
-        # Store trace for logging/experiments
         self.last_trace = {
             "question": question,
             "disclosure_mode": disclosure_mode.value,
+            "authorized": authorized,
             "grounded": grounded,
             "sources": sources,
         }

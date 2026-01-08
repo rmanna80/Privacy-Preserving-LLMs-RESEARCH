@@ -25,6 +25,7 @@ def run_interactive_session():
     print("Commands:")
     print("  /exit")
     print("  /mode open|authorized|redacted")
+    print("   /login | logout")
     print("  /sources on|off\n")
 
     disclosure_mode = DisclosureMode.AUTHORIZED
@@ -73,6 +74,18 @@ def run_interactive_session():
 
             print(f"Sources: {'on' if include_sources else 'off'}")
             continue
+        if q.lower().startswith("/login"):
+            parts = q.split(maxsplit=1)
+            if len(parts) == 2 and parts[1] =="letmein":
+                authorized = True
+                print("Secure mode: ON (authorized)")
+            else:
+                print("Login failed. ")
+            continue
+        if q.lower().startswith("/logout"):
+            authorized = False
+            print("Secure mode: OFF")
+            continue
 
         # ask
         t0 = time.perf_counter()
@@ -81,6 +94,7 @@ def run_interactive_session():
                 q,
                 disclosure_mode=disclosure_mode,
                 include_sources=include_sources,
+                authorized=authorized,
             )
             latency_ms = (time.perf_counter() - t0) * 1000.0
             print("\n" + answer + "\n")

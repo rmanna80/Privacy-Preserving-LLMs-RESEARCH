@@ -18,6 +18,7 @@ class PrivacyPolicy:
         text: str,
         mode: DisclosureMode,
         grounded: bool,
+        authorized: bool = False,
     ) -> str:
         """
         Apply privacy policy to model output.
@@ -30,7 +31,7 @@ class PrivacyPolicy:
             return text
 
         if mode == DisclosureMode.AUTHORIZED:
-            if grounded:
+            if authorized and grounded:
                 return text
             return PrivacyPolicy.SSN_PATTERN.sub("[SSN]", text)
 
