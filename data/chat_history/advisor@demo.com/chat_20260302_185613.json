@@ -1,0 +1,492 @@
+{
+  "chat_id": "chat_20260302_185613",
+  "timestamp": "2026-03-02T18:58:46.304255",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is John and Sally Smith's adjusted gross income?",
+      "timestamp": "2026-03-02T18:57:08.918312"
+    },
+    {
+      "role": "assistant",
+      "content": "$114,550\n\nSources:\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf (page 3)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf (page 3)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf (page 4)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf (page 4)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf (page 1)",
+      "timestamp": "2026-03-02T18:57:16.665577",
+      "metadata": {
+        "latency_ms": 7745.274999993853,
+        "grounded": true,
+        "sources": [
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 3
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf",
+            "page": 3
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 4
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf",
+            "page": 4
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 1
+          }
+        ],
+        "source_count": 7
+      }
+    },
+    {
+      "role": "user",
+      "content": "What is John Smith's SSN?",
+      "timestamp": "2026-03-02T18:57:36.829030"
+    },
+    {
+      "role": "assistant",
+      "content": "111-11-1111\n\nSources:\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 3)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 4)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 6)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 7)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\HIPAA Authorization.pdf (page 1)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 5)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 1)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf (page 1)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Last Will and Testament.pdf (page 1)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Last Will and Testament.pdf (page 11)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Last Will and Testament.pdf (page 12)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Last Will and Testament.pdf (page 10)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Healtcare Directive.pdf (page 1)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\HIPAA Authorization.pdf (page 6)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Pour Over Will.pdf (page 12)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf (page 21)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf (page 19)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Pour Over Will.pdf (page 15)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Pour Over Will.pdf (page 13)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf (page 13)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Healtcare Directive.pdf (page 13)",
+      "timestamp": "2026-03-02T18:57:36.875901",
+      "metadata": {
+        "latency_ms": 44.81649998342618,
+        "grounded": true,
+        "sources": [
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 3
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 4
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 6
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 7
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\HIPAA Authorization.pdf",
+            "page": 1
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 5
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 1
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 1
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Last Will and Testament.pdf",
+            "page": 1
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Last Will and Testament.pdf",
+            "page": 11
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Last Will and Testament.pdf",
+            "page": 12
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Last Will and Testament.pdf",
+            "page": 10
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Healtcare Directive.pdf",
+            "page": 1
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\HIPAA Authorization.pdf",
+            "page": 6
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Pour Over Will.pdf",
+            "page": 12
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 21
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 19
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Pour Over Will.pdf",
+            "page": 15
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Pour Over Will.pdf",
+            "page": 13
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 13
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Healtcare Directive.pdf",
+            "page": 13
+          }
+        ],
+        "source_count": 25
+      }
+    },
+    {
+      "role": "user",
+      "content": "What filing status did the Smiths use?",
+      "timestamp": "2026-03-02T18:57:48.247017"
+    },
+    {
+      "role": "assistant",
+      "content": "The answer is not available in the provided documents.\n\nSources:\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf (page 3)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf (page 3)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 3)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 4)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 6)",
+      "timestamp": "2026-03-02T18:57:49.228904",
+      "metadata": {
+        "latency_ms": 979.1719000204466,
+        "grounded": true,
+        "sources": [
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 3
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf",
+            "page": 3
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 3
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 4
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 6
+          }
+        ],
+        "source_count": 7
+      }
+    },
+    {
+      "role": "user",
+      "content": "what is sally smith ssn?",
+      "timestamp": "2026-03-02T18:58:01.390886"
+    },
+    {
+      "role": "assistant",
+      "content": "I found SSNs for the following names in the retrieved context:\n- JOHN SMITH\n\nPlease specify which person you want.\n\nSources:\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 3)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 4)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 6)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 7)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf (page 5)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 1)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Healtcare Directive.pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 5)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\HIPAA Authorization.pdf (page 1)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf (page 3)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf (page 3)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Last Will and Testament.pdf (page 11)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf (page 1)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Last Will and Testament.pdf (page 12)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Pour Over Will.pdf (page 15)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Pour Over Will.pdf (page 12)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf (page 6)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf (page 1)",
+      "timestamp": "2026-03-02T18:58:01.432533",
+      "metadata": {
+        "latency_ms": 38.862999994307756,
+        "grounded": true,
+        "sources": [
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 3
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 4
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 6
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 7
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 5
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 1
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Healtcare Directive.pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 5
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\HIPAA Authorization.pdf",
+            "page": 1
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 3
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf",
+            "page": 3
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Last Will and Testament.pdf",
+            "page": 11
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 1
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Last Will and Testament.pdf",
+            "page": 12
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Pour Over Will.pdf",
+            "page": 15
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Pour Over Will.pdf",
+            "page": 12
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 6
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 5
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 1
+          }
+        ],
+        "source_count": 25
+      }
+    },
+    {
+      "role": "user",
+      "content": "What is the SSN for Sally Smith?",
+      "timestamp": "2026-03-02T18:58:28.857219"
+    },
+    {
+      "role": "assistant",
+      "content": "I cannot find an SSN associated with that name in the retrieved context.\n\nSources:\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf (page 3)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf (page 3)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 3)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 4)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 6)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 7)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf (page 5)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf (page 1)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf (page 1)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 5)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\HIPAA Authorization.pdf (page 1)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf (page 6)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf (page 1)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Last Will and Testament.pdf (page 11)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Healtcare Directive.pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Pour Over Will.pdf (page 12)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Last Will and Testament.pdf (page 12)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf (page 1)",
+      "timestamp": "2026-03-02T18:58:28.899891",
+      "metadata": {
+        "latency_ms": 39.7324999794364,
+        "grounded": false,
+        "sources": [
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 3
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf",
+            "page": 3
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 3
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 4
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 6
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 7
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 5
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 1
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf",
+            "page": 1
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 5
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\HIPAA Authorization.pdf",
+            "page": 1
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 5
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 6
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 1
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Last Will and Testament.pdf",
+            "page": 11
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Healtcare Directive.pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Pour Over Will.pdf",
+            "page": 12
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Last Will and Testament.pdf",
+            "page": 12
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 1
+          }
+        ],
+        "source_count": 25
+      }
+    },
+    {
+      "role": "user",
+      "content": "What is Sally's last name?",
+      "timestamp": "2026-03-02T18:58:45.153609"
+    },
+    {
+      "role": "assistant",
+      "content": "Smith\n\nSources:\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf (page 3)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf (page 3)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Healtcare Directive.pdf (page 2)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_Austin_and_Lila_Accumulator.pdf (page 0)\n- C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf (page 0)",
+      "timestamp": "2026-03-02T18:58:46.303279",
+      "metadata": {
+        "latency_ms": 1138.912700000219,
+        "grounded": true,
+        "sources": [
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 3
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf",
+            "page": 3
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\Healtcare Directive.pdf",
+            "page": 2
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_Austin_and_Lila_Accumulator.pdf",
+            "page": 0
+          },
+          {
+            "source": "C:\\Users\\Owner\\OneDrive\\Documentos\\Privacy-Preserving-LLMs-RESEARCH\\data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 0
+          }
+        ],
+        "source_count": 7
+      }
+    }
+  ]
+}

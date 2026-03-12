@@ -1,0 +1,133 @@
+{
+  "chat_id": "chat_20260203_193610",
+  "timestamp": "2026-02-03T19:37:47.102723",
+  "messages": [
+    {
+      "role": "user",
+      "content": "what is the ssn for john smith?",
+      "timestamp": "2026-02-03T19:37:30.438291"
+    },
+    {
+      "role": "assistant",
+      "content": "111-11-1111\n\nSources:\n- data\\raw_pdfs\\Power of Attorney.pdf (page 3)\n- data\\raw_pdfs\\Power of Attorney.pdf (page 4)\n- data\\raw_pdfs\\Power of Attorney.pdf (page 6)\n- data\\raw_pdfs\\Power of Attorney.pdf (page 7)\n- data\\raw_pdfs\\Power of Attorney.pdf (page 2)\n- data\\raw_pdfs\\Power of Attorney.pdf (page 5)\n- data\\raw_pdfs\\HIPAA Authorization.pdf (page 1)\n- data\\raw_pdfs\\Power of Attorney.pdf (page 1)\n- data\\raw_pdfs\\Revocable Living Trust.pdf (page 1)\n- data\\raw_pdfs\\Schedule of Assets.pdf (page 1)\n- data\\raw_pdfs\\Revocable Living Trust.pdf (page 2)\n- data\\raw_pdfs\\Last Will and Testament.pdf (page 1)\n- data\\raw_pdfs\\Last Will and Testament.pdf (page 11)\n- data\\raw_pdfs\\Last Will and Testament.pdf (page 12)\n- data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf (page 2)\n- data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf (page 2)\n- data\\raw_pdfs\\Revocable Living Trust.pdf (page 21)\n- data\\raw_pdfs\\Last Will and Testament.pdf (page 10)\n- data\\raw_pdfs\\HIPAA Authorization.pdf (page 6)\n- data\\raw_pdfs\\Pour Over Will.pdf (page 12)\n- data\\raw_pdfs\\Healtcare Directive.pdf (page 1)\n- data\\raw_pdfs\\Pour Over Will.pdf (page 13)\n- data\\raw_pdfs\\Revocable Living Trust.pdf (page 19)\n- data\\raw_pdfs\\Revocable Living Trust.pdf (page 13)\n- data\\raw_pdfs\\Healtcare Directive.pdf (page 13)",
+      "timestamp": "2026-02-03T19:37:30.519677",
+      "metadata": {
+        "latency_ms": 79.17209999868646,
+        "grounded": true,
+        "sources": [
+          {
+            "source": "data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 3
+          },
+          {
+            "source": "data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 4
+          },
+          {
+            "source": "data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 6
+          },
+          {
+            "source": "data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 7
+          },
+          {
+            "source": "data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 2
+          },
+          {
+            "source": "data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 5
+          },
+          {
+            "source": "data\\raw_pdfs\\HIPAA Authorization.pdf",
+            "page": 1
+          },
+          {
+            "source": "data\\raw_pdfs\\Power of Attorney.pdf",
+            "page": 1
+          },
+          {
+            "source": "data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 1
+          },
+          {
+            "source": "data\\raw_pdfs\\Schedule of Assets.pdf",
+            "page": 1
+          },
+          {
+            "source": "data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 2
+          },
+          {
+            "source": "data\\raw_pdfs\\Last Will and Testament.pdf",
+            "page": 1
+          },
+          {
+            "source": "data\\raw_pdfs\\Last Will and Testament.pdf",
+            "page": 11
+          },
+          {
+            "source": "data\\raw_pdfs\\Last Will and Testament.pdf",
+            "page": 12
+          },
+          {
+            "source": "data\\raw_pdfs\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 2
+          },
+          {
+            "source": "data\\raw_pdfs\\2024_John_and_Sally_Smith.pdf",
+            "page": 2
+          },
+          {
+            "source": "data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 21
+          },
+          {
+            "source": "data\\raw_pdfs\\Last Will and Testament.pdf",
+            "page": 10
+          },
+          {
+            "source": "data\\raw_pdfs\\HIPAA Authorization.pdf",
+            "page": 6
+          },
+          {
+            "source": "data\\raw_pdfs\\Pour Over Will.pdf",
+            "page": 12
+          },
+          {
+            "source": "data\\raw_pdfs\\Healtcare Directive.pdf",
+            "page": 1
+          },
+          {
+            "source": "data\\raw_pdfs\\Pour Over Will.pdf",
+            "page": 13
+          },
+          {
+            "source": "data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 19
+          },
+          {
+            "source": "data\\raw_pdfs\\Revocable Living Trust.pdf",
+            "page": 13
+          },
+          {
+            "source": "data\\raw_pdfs\\Healtcare Directive.pdf",
+            "page": 13
+          }
+        ],
+        "source_count": 25
+      }
+    },
+    {
+      "role": "user",
+      "content": "what is the tax year for john and sally smith?",
+      "timestamp": "2026-02-03T19:37:47.019964"
+    },
+    {
+      "role": "assistant",
+      "content": "\u274c Error: model \"qwen2.5:7b\" not found, try pulling it first (status code: 404)",
+      "timestamp": "2026-02-03T19:37:47.101471"
+    }
+  ]
+}

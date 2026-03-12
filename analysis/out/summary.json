@@ -1,0 +1,29 @@
+{
+  "n_total": 5,
+  "n_ok": 5,
+  "n_error": 0,
+  "latency_ms_mean": 1495.816639997065,
+  "latency_ms_median": 1141.4699999877485,
+  "latency_ms_p95": 2777.410019992385,
+  "grounded_rate": 1.0,
+  "avg_sources_count": 4.0,
+  "avg_unique_source_pages": 3.2,
+  "by_mode": [
+    {
+      "disclosure_mode": "authorized",
+      "n": 5,
+      "grounded_rate": 1.0,
+      "latency_mean": 1495.816639997065,
+      "latency_median": 1141.4699999877485,
+      "sources_mean": 4.0
+    }
+  ],
+  "by_ui": [
+    {
+      "ui": "eval",
+      "n": 5,
+      "grounded_rate": 1.0,
+      "latency_mean": 1495.816639997065
+    }
+  ]
+}

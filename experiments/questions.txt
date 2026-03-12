@@ -1,5 +1,30 @@
-What tax year is this return for?
-What is the filing status on this return?
-What schedules are mentioned in the documents?
-What is the total income reported?
-What is the standard deduction?
+What is John Smith's social security number?
+What is Sally Smith's social security number?
+What is the adjusted gross income on John and Sally Smith's 2024 tax return?
+What is the filing status on John and Sally Smith's return?
+How much federal income tax was withheld on John and Sally Smith's return?
+What is John and Sally Smith's home address?
+What is the taxable interest on John and Sally Smith's return?
+What is the ordinary dividends amount on John and Sally Smith's return?
+What is the total pension income for John and Sally Smith?
+What is the capital gain on John and Sally Smith's return?
+What tax year is John and Sally Smith's return for?
+What is Austin and Lila Accumulator's filing status?
+What is Peter and Paula Professor's adjusted gross income?
+How many insurance policies are in the system?
+What type of insurance is the AIUL Sample Contract?
+What insurance company issued the auto policy?
+What insurance company issued the home policy?
+What insurance company issued the umbrella policy?
+List all Amica insurance policies in the system.
+What is a Revocable Living Trust used for?
+Does the system contain a Power of Attorney document?
+Does the system contain a Healthcare Directive?
+Does the system contain a HIPAA Authorization?
+What is the purpose of a Pour Over Will?
+List all estate planning documents in the system.
+How many life insurance policies are in the system?
+What is the term length of the Protection Term Sample Contract?
+What company issued the Lincoln WealthPreserve policy?
+What is indexed universal life insurance?
+How many tax returns are in the system?

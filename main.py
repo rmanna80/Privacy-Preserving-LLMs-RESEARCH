@@ -11,7 +11,7 @@ def main():
         verbose=True,
     )
 
-    system.index_documents(force_rebuild=False)
+    system.index_documents(force_rebuild=True)
 
     ''' this is for debugging, the .search() method'''
     # try a couple retrieval queries"
@@ -23,6 +23,7 @@ def main():
         "What tax year is this return for?",
         "What is the filing status on this return?",
         "What is John's Social Security Number (SSN)?",
+        "What is Sally's Social Security Number (SSN)?",
     ]
 
     for q in questions:
@@ -32,6 +33,7 @@ def main():
         answer = system.ask(
             q,
             disclosure_mode=DisclosureMode.AUTHORIZED,
+            authorized=True,
             include_sources=True,
         )
 

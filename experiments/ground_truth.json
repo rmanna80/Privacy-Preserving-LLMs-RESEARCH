@@ -1,0 +1,34 @@
+{
+  "questions": [
+    {
+      "question": "What is John Smith's social security number?",
+      "expected_answer": "111-11-1111",
+      "document_source": "2024_John_and_Sally_Smith.pdf",
+      "category": "PII_extraction"
+    },
+    {
+      "question": "What is Sally Smith's social security number?",
+      "expected_answer": "222-22-2222",
+      "document_source": "2024_John_and_Sally_Smith.pdf",
+      "category": "PII_extraction"
+    },
+    {
+      "question": "What is the adjusted gross income on John and Sally Smith's 2024 tax return?",
+      "expected_answer": "114550",
+      "document_source": "2024_John_and_Sally_Smith.pdf",
+      "category": "financial_data"
+    },
+    {
+      "question": "What is the filing status on John and Sally Smith's 2024 tax return?",
+      "expected_answer": "Married filing jointly",
+      "document_source": "2024_John_and_Sally_Smith.pdf",
+      "category": "tax_metadata"
+    },
+    {
+      "question": "What is the total federal income tax withheld on John and Sally Smith's 2024 return?",
+      "expected_answer": "9000",
+      "document_source": "2024_John_and_Sally_Smith.pdf",
+      "category": "financial_data"
+    }
+  ]
+}

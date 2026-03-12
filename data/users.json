@@ -1,0 +1,17 @@
+{
+  "advisor@demo.com": {
+    "password": "ba3f11752051adbe676a006ca8eb470bcd5981164595590c2aad9a8646c08164",
+    "role": "advisor",
+    "name": "Financial Advisor"
+  },
+  "john.smith@demo.com": {
+    "password": "186474c1f2c2f735a54c2cf82ee8e87f2a5cd30940e280029363fecedfc5328c",
+    "role": "client",
+    "name": "John Smith"
+  },
+  "sally.smith@demo.com": {
+    "password": "186474c1f2c2f735a54c2cf82ee8e87f2a5cd30940e280029363fecedfc5328c",
+    "role": "client",
+    "name": "Sally Smith"
+  }
+}
