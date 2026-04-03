@@ -1,12 +1,8 @@
 # ui/app.py
-
 import streamlit as st
 from pathlib import Path
 import sys
-import time
-from datetime import datetime
 
-# Add project root to path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.append(str(PROJECT_ROOT))
 
@@ -17,52 +13,50 @@ from ui.components.sidebar import render_sidebar
 from ui.components.chat_interface import render_chat_interface
 from ui.components.document_manager import render_document_manager
 
-# Page config
 st.set_page_config(
-    page_title="FinancialQA AI - Privacy-Preserving Financial Assistant",
+    page_title="FinancialQA AI",
     page_icon="💼",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
-# Custom CSS
 st.markdown("""
 <style>
     .main { background-color: #0e1117; }
     .stChatMessage { background-color: #1e1e1e; border-radius: 10px; padding: 15px; margin: 10px 0; }
     .stChatMessage[data-testid="user-message"] { background-color: #2b5278; }
-    .stChatMessage[data-testid="assistant-message"] { background-color: #1e1e1e; }
-    .stTextInput input { background-color: #262730; color: white; border: 1px solid #404040; border-radius: 8px; }
-    .css-1d391kg { background-color: #0e1117; }
     h1, h2, h3 { color: #ffffff; }
     .privacy-badge {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 10px 20px; border-radius: 20px; color: white;
-        font-weight: bold; display: inline-block; margin: 10px 0;
+        padding: 8px 18px; border-radius: 20px; color: white;
+        font-weight: bold; display: inline-block; margin: 8px 0;
     }
     .login-container {
-        max-width: 400px; margin: 100px auto; padding: 40px;
+        max-width: 420px; margin: 80px auto; padding: 40px;
         background-color: #1e1e1e; border-radius: 15px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.4);
     }
 </style>
 """, unsafe_allow_html=True)
 
 
-def init_session_state():
-    if "authenticated" not in st.session_state:
-        st.session_state.authenticated = False
-    if "user" not in st.session_state:
-        st.session_state.user = None
-    if "qa_system" not in st.session_state:
-        st.session_state.qa_system = None
-    if "chat_history" not in st.session_state:
-        st.session_state.chat_history = []
-    if "current_chat_id" not in st.session_state:
-        st.session_state.current_chat_id = None
-    if "disclosure_mode" not in st.session_state:
-        st.session_state.disclosure_mode = DisclosureMode.AUTHORIZED
+# ── Session state ──────────────────────────────────────────────────────────
 
+def init_session_state():
+    defaults = {
+        "authenticated":    False,
+        "user":             None,
+        "qa_system":        None,
+        "chat_history":     [],
+        "current_chat_id":  None,
+        "disclosure_mode":  DisclosureMode.AUTHORIZED,
+    }
+    for k, v in defaults.items():
+        if k not in st.session_state:
+            st.session_state[k] = v
+
+
+# ── Login ──────────────────────────────────────────────────────────────────
 
 def login_page():
     st.markdown('<div class="login-container">', unsafe_allow_html=True)
@@ -71,109 +65,132 @@ def login_page():
     st.markdown('<div class="privacy-badge">🛡️ 100% Local Processing</div>', unsafe_allow_html=True)
     st.markdown("---")
 
-    username = st.text_input("Email", key="login_username")
+    username = st.text_input("Email",    key="login_username")
     password = st.text_input("Password", type="password", key="login_password")
 
     col1, col2 = st.columns(2)
+
     with col1:
         if st.button("🔓 Sign In", use_container_width=True):
             auth = AuthSystem()
-            user = auth.authenticate(username, password)
-            if user:
-                st.session_state.authenticated = True
-                st.session_state.user = user
-                st.rerun()
+
+            if auth.is_locked_out(username):
+                st.error("🔒 Too many failed attempts. Please wait 5 minutes.")
             else:
-                st.error("❌ Invalid credentials")
+                user = auth.authenticate(username, password)
+                if user:
+                    st.session_state.authenticated = True
+                    st.session_state.user          = user
+                    st.rerun()
+                else:
+                    st.error("❌ Invalid credentials")
 
     with col2:
-        if st.button("ℹ️ Demo Info", use_container_width=True):
+        if st.button("ℹ️ Demo Accounts", use_container_width=True):
             st.info("""
-            **Demo Credentials:**
+**Super Admin:**
+- admin@demo.com / admin123
 
-            **Advisor:**
-            - Email: advisor@demo.com
-            - Password: advisor123
+**Advisors:**
+- advisor.adam@demo.com / advisor123
+- advisor.jake@demo.com / advisor456
 
-            **Client (John Smith):**
-            - Email: john.smith@demo.com
-            - Password: client123
+**Clients (Adam's):**
+- john.smith@demo.com / client123
+- sally.smith@demo.com / client123
+
+**Clients (Jake's):**
+- peter.professor@demo.com / client123
             """)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
 
+# ── QA System init ─────────────────────────────────────────────────────────
+
 def initialize_qa_system(user):
-    """Initialize QA system for the logged-in user"""
-    if st.session_state.qa_system is None:
-        with st.spinner("🔧 Initializing AI system..."):
-            auth = AuthSystem()
-            docs_dir = auth.get_user_documents_dir(user)
+    if st.session_state.qa_system is not None:
+        return
 
-            system = FinancialQASystem(
-                docs_dir=str(docs_dir),
-                db_dir=str(PROJECT_ROOT / "vectorstore" / user.username / "chroma_db"),
-                chunk_size=1200,
-                chunk_overlap=200,
-                verbose=False
-            )
+    with st.spinner("🔧 Loading AI system..."):
+        auth     = AuthSystem()
+        docs_dir = auth.get_user_documents_dir(user)
+        db_dir   = auth.get_vectorstore_dir(user.username)
 
-            system.index_documents(force_rebuild=False)
-            st.session_state.qa_system = system
+        system = FinancialQASystem(
+            docs_dir=str(docs_dir),
+            db_dir=str(db_dir),
+            chunk_size=1200,
+            chunk_overlap=200,
+            verbose=False,
+        )
+        system.index_documents(force_rebuild=False)
+        st.session_state.qa_system = system
 
-            if system.vector_store is None:
-                if user.role == UserRole.CLIENT:
-                    st.warning("📭 No documents found. Your advisor hasn't uploaded your documents yet.")
-                else:
-                    st.warning("⚠️ No documents found in advisor pool. Add PDFs to data/raw_pdfs/")
-            else:
-                st.success("✅ System ready!")
+        if system.vector_store is None:
+            if user.is_client():
+                st.warning("📭 Your advisor hasn't uploaded your documents yet.")
+            elif user.is_advisor():
+                st.info("📂 Upload documents for your clients in the Documents tab.")
+        else:
+            st.success("✅ System ready!")
 
+
+# ── Main app ───────────────────────────────────────────────────────────────
 
 def main_app():
     user = st.session_state.user
-
-    # Initialize QA system
     initialize_qa_system(user)
 
-    # Sidebar
     with st.sidebar:
         render_sidebar(user)
 
-    # Tabs — advisor gets 3, clients get 2 (Chat + read-only My Documents)
-    if user.role == UserRole.ADVISOR:
+    # Tab layout by role
+    if user.is_admin():
+        tab1, tab2 = st.tabs(["👥 User Management", "📊 Analytics"])
+        with tab1:
+            render_document_manager(user)
+        with tab2:
+            from ui.components.analytics_dashboard import render_analytics_dashboard
+            render_analytics_dashboard()
+
+    elif user.is_advisor():
         tab1, tab2, tab3 = st.tabs(["💬 Chat", "📁 Client Documents", "📊 Analytics"])
-    else:
-        tab1, tab2 = st.tabs(["💬 Chat", "📁 My Documents"])
-
-    # Chat Tab
-    with tab1:
-        col1, col2 = st.columns([3, 1])
-        with col1:
-            st.markdown("# 💬 Chat")
-            st.markdown(f"**{user.client_name}** ({user.role.value})")
-        with col2:
-            mode_options = {
-                "🔓 Open": DisclosureMode.OPEN,
-                "✅ Authorized": DisclosureMode.AUTHORIZED,
-                "🔒 Redacted": DisclosureMode.REDACTED
-            }
-            selected_mode = st.selectbox("Privacy Mode", options=list(mode_options.keys()), index=1)
-            st.session_state.disclosure_mode = mode_options[selected_mode]
-
-        st.markdown("---")
-        render_chat_interface(user, st.session_state.qa_system)
-
-    # Documents Tab
-    with tab2:
-        render_document_manager(user)
-
-    # Analytics Tab (Advisor only)
-    if user.role == UserRole.ADVISOR:
+        with tab1:
+            _render_chat_tab(user)
+        with tab2:
+            render_document_manager(user)
         with tab3:
             from ui.components.analytics_dashboard import render_analytics_dashboard
             render_analytics_dashboard()
 
+    else:  # client
+        tab1, tab2 = st.tabs(["💬 Chat", "📁 My Documents"])
+        with tab1:
+            _render_chat_tab(user)
+        with tab2:
+            render_document_manager(user)
+
+
+def _render_chat_tab(user):
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        st.markdown("# 💬 Chat")
+        st.markdown(f"**{user.client_name}** · *{user.role.value.replace('_', ' ').title()}*")
+    with col2:
+        mode_options = {
+            "🔓 Open":       DisclosureMode.OPEN,
+            "✅ Authorized": DisclosureMode.AUTHORIZED,
+            "🔒 Redacted":   DisclosureMode.REDACTED,
+        }
+        selected = st.selectbox("Privacy Mode", list(mode_options.keys()), index=1)
+        st.session_state.disclosure_mode = mode_options[selected]
+
+    st.markdown("---")
+    render_chat_interface(user, st.session_state.qa_system)
+
+
+# ── Entry point ────────────────────────────────────────────────────────────
 
 def main():
     init_session_state()

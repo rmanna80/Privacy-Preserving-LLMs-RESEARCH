@@ -1,17 +1,38 @@
 {
-  "advisor@demo.com": {
+  "admin@demo.com": {
+    "password": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+    "role": "super_admin",
+    "name": "System Administrator",
+    "advisor_id": null
+  },
+  "advisor.adam@demo.com": {
     "password": "ba3f11752051adbe676a006ca8eb470bcd5981164595590c2aad9a8646c08164",
     "role": "advisor",
-    "name": "Financial Advisor"
+    "name": "Adam Advisor",
+    "advisor_id": null
+  },
+  "advisor.jake@demo.com": {
+    "password": "f9eb8b8457bd7aa44be37e5f96b3c58e86fc031ad6b00b613d11aa40d25e50e5",
+    "role": "advisor",
+    "name": "Jake Advisor",
+    "advisor_id": null
   },
   "john.smith@demo.com": {
     "password": "186474c1f2c2f735a54c2cf82ee8e87f2a5cd30940e280029363fecedfc5328c",
     "role": "client",
-    "name": "John Smith"
+    "name": "John Smith",
+    "advisor_id": "advisor.adam@demo.com"
   },
   "sally.smith@demo.com": {
     "password": "186474c1f2c2f735a54c2cf82ee8e87f2a5cd30940e280029363fecedfc5328c",
     "role": "client",
-    "name": "Sally Smith"
+    "name": "Sally Smith",
+    "advisor_id": "advisor.adam@demo.com"
+  },
+  "peter.professor@demo.com": {
+    "password": "186474c1f2c2f735a54c2cf82ee8e87f2a5cd30940e280029363fecedfc5328c",
+    "role": "client",
+    "name": "Peter Professor",
+    "advisor_id": "advisor.jake@demo.com"
   }
 }
