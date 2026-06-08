@@ -1,0 +1,168 @@
+{
+  "chat_id": "chat_20260417_130925",
+  "timestamp": "2026-04-17T13:09:58.329265",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is my adjusted gross income?",
+      "timestamp": "2026-04-17T13:09:38.486164"
+    },
+    {
+      "role": "assistant",
+      "content": "Based on the provided documents, your adjusted gross income (AGI) can be calculated as follows:\n\nFor Peter and Paula Professor:\n1. Total income = $123,000 (sum of lines 1z, 2b, 3b, 4b, 5b, 6b, 7, and 8)\n2. Adjustments to income from Schedule 1, line 26 = $14,600\n3. AGI = Total income - Adjustments to income = $123,000 - $14,600 = $108,400\n\nFor John and Sally Smith:\n1. Total income = $98,000 (sum of lines 1z, 2b, 3b, 4b, 5b, 6b, 7, and 8)\n2. Adjustments to income from Schedule 1, line 26 = Not provided in the given excerpt\n   - Assuming no adjustments or similar values as Peter and Paula Professor: $0\n3. AGI = Total income - Adjustments to income = $98,000 - $0 = $98,000\n\nThe exact value for Austin and Lila Accumulator is not provided in the given excerpt, so I don't see that in the documents I have access to.",
+      "timestamp": "2026-04-17T13:09:44.398590",
+      "metadata": {
+        "latency_ms": 5910.84850000334,
+        "grounded": true,
+        "sources": [
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Austin_and_Lila_Accumulator.pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 1
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 1
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 13
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 9
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Austin_and_Lila_Accumulator.pdf",
+            "page": 2
+          }
+        ],
+        "source_count": 7
+      }
+    },
+    {
+      "role": "user",
+      "content": "What is John Smith SSN?",
+      "timestamp": "2026-04-17T13:09:58.313285"
+    },
+    {
+      "role": "assistant",
+      "content": "I cannot find any SSNs in the retrieved documents.",
+      "timestamp": "2026-04-17T13:09:58.328933",
+      "metadata": {
+        "latency_ms": 14.0397000068333,
+        "grounded": false,
+        "sources": [
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Power of Attorney.pdf",
+            "page": 3
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Power of Attorney.pdf",
+            "page": 4
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Power of Attorney.pdf",
+            "page": 6
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Power of Attorney.pdf",
+            "page": 7
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Power of Attorney.pdf",
+            "page": 2
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Power of Attorney.pdf",
+            "page": 5
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\HIPAA Authorization.pdf",
+            "page": 1
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Power of Attorney.pdf",
+            "page": 1
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Revocable Living Trust.pdf",
+            "page": 1
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Last Will and Testament.pdf",
+            "page": 1
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Last Will and Testament.pdf",
+            "page": 10
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Last Will and Testament.pdf",
+            "page": 12
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Last Will and Testament.pdf",
+            "page": 11
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Revocable Living Trust.pdf",
+            "page": 2
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Healtcare Directive.pdf",
+            "page": 1
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Revocable Living Trust.pdf",
+            "page": 21
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Pour Over Will.pdf",
+            "page": 12
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\HIPAA Authorization.pdf",
+            "page": 6
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Pour Over Will.pdf",
+            "page": 15
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Revocable Living Trust.pdf",
+            "page": 19
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Pour Over Will.pdf",
+            "page": 13
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 2
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 2
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Healtcare Directive.pdf",
+            "page": 13
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Revocable Living Trust.pdf",
+            "page": 13
+          }
+        ],
+        "source_count": 25
+      }
+    }
+  ]
+}

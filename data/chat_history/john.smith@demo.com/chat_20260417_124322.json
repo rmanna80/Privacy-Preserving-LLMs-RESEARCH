@@ -1,0 +1,22 @@
+{
+  "chat_id": "chat_20260417_124322",
+  "timestamp": "2026-04-17T12:43:41.201663",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Summarize my tax return",
+      "timestamp": "2026-04-17T12:43:30.528557"
+    },
+    {
+      "role": "assistant",
+      "content": "\u274c Something went wrong: [WinError 10061] No connection could be made because the target machine actively refused it",
+      "timestamp": "2026-04-17T12:43:41.069895",
+      "metadata": {
+        "latency_ms": 10539.195599994855,
+        "grounded": false,
+        "sources": [],
+        "source_count": 0
+      }
+    }
+  ]
+}

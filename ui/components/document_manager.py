@@ -6,14 +6,16 @@ Document manager:
   CLIENT      → read-only view of their documents
 """
 
-import streamlit as st
 from pathlib import Path
 import sys
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-sys.path.append(str(PROJECT_ROOT))
+import streamlit as st
 
-from ui.auth import AuthSystem, UserRole, User
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.append(str(PROJECT_ROOT))
+
+from ui.auth import AuthSystem, User
 
 
 def render_document_manager(user: User):
@@ -31,20 +33,20 @@ def _render_admin_view(user: User):
     st.markdown("## 🔑 Admin — System Overview")
     st.markdown("---")
 
-    auth     = AuthSystem()
+    auth = AuthSystem()
     advisors = auth.get_all_advisors()
-    clients  = auth.get_all_clients()
+    clients = auth.get_all_clients()
 
     col1, col2 = st.columns(2)
     col1.metric("Total Advisors", len(advisors))
-    col2.metric("Total Clients",  len(clients))
+    col2.metric("Total Clients", len(clients))
 
     st.markdown("### 👥 Advisors")
     for adv in advisors:
         adv_clients = auth.get_clients_for_advisor(adv.username)
         with st.expander(f"📋 {adv.client_name} ({adv.username}) — {len(adv_clients)} client(s)"):
             for c in adv_clients:
-                st.markdown(f"  • {c.client_name} ({c.username})")
+                st.markdown(f"• {c.client_name} ({c.username})")
 
     st.markdown("---")
     st.markdown("### ➕ Create New User")
@@ -58,35 +60,42 @@ def _render_admin_view(user: User):
 def _render_create_user_form(auth: AuthSystem, advisors):
     with st.form("create_user_form"):
         col1, col2 = st.columns(2)
+
         with col1:
-            new_email    = st.text_input("Email")
-            new_name     = st.text_input("Full Name")
+            new_email = st.text_input("Email")
+            new_name = st.text_input("Full Name")
+
         with col2:
-            new_role     = st.selectbox("Role", ["client", "advisor"])
+            new_role = st.selectbox("Role", ["client", "advisor"])
             new_password = st.text_input("Temporary Password", type="password")
 
         advisor_options = {a.client_name: a.username for a in advisors}
         selected_advisor = None
+
         if new_role == "client" and advisor_options:
             selected_advisor = st.selectbox("Assign to Advisor", list(advisor_options.keys()))
 
-        if st.form_submit_button("✅ Create User", type="primary"):
+        submitted = st.form_submit_button("✅ Create User", type="primary")
+
+        if submitted:
             if not all([new_email, new_name, new_password]):
                 st.error("All fields are required.")
+                return
+
+            advisor_id = advisor_options.get(selected_advisor) if selected_advisor else None
+            ok = auth.create_user(
+                username=new_email.strip().lower(),
+                password=new_password,
+                role=new_role,
+                name=new_name,
+                advisor_id=advisor_id,
+            )
+
+            if ok:
+                st.success(f"✅ Created {new_role} account for {new_name}")
+                st.rerun()
             else:
-                advisor_id = advisor_options.get(selected_advisor) if selected_advisor else None
-                ok = auth.create_user(
-                    username=new_email.strip().lower(),
-                    password=new_password,
-                    role=new_role,
-                    name=new_name,
-                    advisor_id=advisor_id,
-                )
-                if ok:
-                    st.success(f"✅ Created {new_role} account for {new_name}")
-                    st.rerun()
-                else:
-                    st.error("User already exists or creation failed.")
+                st.error("User already exists or creation failed.")
 
 
 def _render_reassign_form(auth: AuthSystem, clients, advisors):
@@ -95,13 +104,15 @@ def _render_reassign_form(auth: AuthSystem, clients, advisors):
         return
 
     with st.form("reassign_form"):
-        client_options  = {f"{c.client_name} ({c.username})": c.username for c in clients}
+        client_options = {f"{c.client_name} ({c.username})": c.username for c in clients}
         advisor_options = {a.client_name: a.username for a in advisors}
 
-        selected_client  = st.selectbox("Client",      list(client_options.keys()))
+        selected_client = st.selectbox("Client", list(client_options.keys()))
         selected_advisor = st.selectbox("New Advisor", list(advisor_options.keys()))
 
-        if st.form_submit_button("🔀 Reassign"):
+        submitted = st.form_submit_button("🔀 Reassign")
+
+        if submitted:
             ok = auth.reassign_client(
                 client_options[selected_client],
                 advisor_options[selected_advisor],
@@ -120,33 +131,39 @@ def _render_advisor_view(user: User):
     st.markdown("Upload and manage documents for your clients.")
     st.markdown("---")
 
-    auth    = AuthSystem()
+    auth = AuthSystem()
     clients = auth.get_clients_for_advisor(user.username)
 
     if not clients:
         st.info("You have no clients assigned yet. Contact your administrator.")
         return
 
-    client_options   = {c.client_name: c for c in clients}
-    selected_name    = st.selectbox("📋 Select Client", list(client_options.keys()))
-    selected_client  = client_options[selected_name]
-    client_dir       = auth.get_client_documents_dir(selected_client.username)
+    client_options = {c.client_name: c for c in clients}
+    selected_name = st.selectbox("📋 Select Client", list(client_options.keys()))
+    selected_client = client_options[selected_name]
+    client_dir = auth.get_client_documents_dir(selected_client.username)
 
-    st.markdown(f"### Documents for **{selected_client.client_name}**")
+    st.markdown(f"### Documents for {selected_client.client_name}")
 
-    # Existing docs
     existing_pdfs = sorted(client_dir.glob("*.pdf"))
     if existing_pdfs:
         st.markdown(f"**{len(existing_pdfs)} document(s) on file:**")
         for pdf in existing_pdfs:
             c1, c2 = st.columns([5, 1])
             c1.markdown(f"📄 {pdf.name}")
-            if c2.button("🗑️", key=f"del_{pdf.name}_{selected_client.username}",
-                         help=f"Delete {pdf.name}"):
-                pdf.unlink()
-                st.session_state.qa_system = None   # force reindex
-                st.success(f"Deleted {pdf.name}")
-                st.rerun()
+            if c2.button(
+                "🗑️",
+                key=f"del_{pdf.name}_{selected_client.username}",
+                help=f"Delete {pdf.name}",
+            ):
+                try:
+                    pdf.unlink()
+                    st.session_state.qa_system = None
+                    st.session_state.qa_owner = None
+                    st.success(f"Deleted {pdf.name}")
+                    st.rerun()
+                except Exception as exc:
+                    st.error(f"Failed to delete {pdf.name}: {exc}")
     else:
         st.info(f"No documents uploaded for {selected_client.client_name} yet.")
 
@@ -161,13 +178,41 @@ def _render_advisor_view(user: User):
     )
 
     if uploaded_files:
-        if st.button("💾 Save", type="primary"):
+        st.markdown("#### Selected Files")
+        for file in uploaded_files:
+            size_kb = round(len(file.getvalue()) / 1024, 1)
+            st.markdown(f"📄 {file.name} ({size_kb} KB)")
+
+        save_clicked = st.button(
+            "💾 Save Documents",
+            type="primary",
+            key=f"save_docs_{selected_client.username}",
+            use_container_width=True,
+        )
+
+        if save_clicked:
             saved = []
-            for f in uploaded_files:
-                (client_dir / f.name).write_bytes(f.getvalue())
-                saved.append(f.name)
-            st.success(f"✅ Saved {len(saved)} file(s) for {selected_client.client_name}")
-            st.session_state.qa_system = None   # force reindex on next client login
+            failed = []
+
+            for file in uploaded_files:
+                try:
+                    file_path = client_dir / file.name
+                    file_path.write_bytes(file.getvalue())
+                    saved.append(file.name)
+                except Exception as exc:
+                    failed.append((file.name, str(exc)))
+
+            if saved:
+                st.success(
+                    f"✅ Saved {len(saved)} file(s) for {selected_client.client_name}"
+                )
+
+            if failed:
+                for name, err in failed:
+                    st.error(f"Failed to save {name}: {err}")
+
+            st.session_state.qa_system = None
+            st.session_state.qa_owner = None
             st.rerun()
 
 
@@ -178,9 +223,9 @@ def _render_client_view(user: User):
     st.markdown("These documents have been shared with you by your financial advisor.")
     st.markdown("---")
 
-    auth       = AuthSystem()
+    auth = AuthSystem()
     client_dir = auth.get_client_documents_dir(user.username)
-    pdfs       = sorted(client_dir.glob("*.pdf"))
+    pdfs = sorted(client_dir.glob("*.pdf"))
 
     if pdfs:
         st.markdown(f"**{len(pdfs)} document(s) on file:**")

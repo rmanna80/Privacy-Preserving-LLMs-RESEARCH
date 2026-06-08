@@ -1,0 +1,22 @@
+{
+  "chat_id": "chat_20260417_121557",
+  "timestamp": "2026-04-17T12:16:11.555878",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is my adjusted gross income?",
+      "timestamp": "2026-04-17T12:16:10.633795"
+    },
+    {
+      "role": "assistant",
+      "content": "\ud83d\udced No documents are loaded yet. Your advisor needs to upload documents for you first.",
+      "timestamp": "2026-04-17T12:16:10.635053",
+      "metadata": {
+        "latency_ms": 0,
+        "grounded": false,
+        "sources": [],
+        "source_count": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,375 @@
+{
+  "chat_id": "chat_20260417_125708",
+  "timestamp": "2026-04-17T13:01:21.665044",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What documents do you have for me?",
+      "timestamp": "2026-04-17T12:57:18.943554"
+    },
+    {
+      "role": "assistant",
+      "content": "I have the following documents for you:\n\n1. **Healthcare Directive**: This document includes a release and discharge clause related to your Health Care Agent's actions.\n2. **HIPAA Authorization**: Instructions for reviewing, signing, and notarizing (if desired) this document.\n3. **Tax Return Forms**:\n   - 2024_John_and_Sally_Smith\n   - 2024_Peter_and_Paula_Professor\n   - 2024_Austin_and_Lila_Accumulator\n4. **FinCEN Form 114 Related Document**: Information about potential foreign financial accounts and the requirement to file FinCEN Form 114 if applicable.\n\nThese documents cover healthcare directives, tax information, and some aspects of financial reporting related to foreign assets.",
+      "timestamp": "2026-04-17T12:57:27.145224",
+      "metadata": {
+        "latency_ms": 8200.011899985839,
+        "grounded": true,
+        "sources": [
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Healtcare Directive.pdf",
+            "page": 8
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\HIPAA Authorization.pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 8
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Austin_and_Lila_Accumulator.pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 0
+          }
+        ],
+        "source_count": 7
+      }
+    },
+    {
+      "role": "user",
+      "content": "what is my ssn?",
+      "timestamp": "2026-04-17T12:57:46.134161"
+    },
+    {
+      "role": "assistant",
+      "content": "I cannot find any SSNs in the retrieved documents.",
+      "timestamp": "2026-04-17T12:57:48.925289",
+      "metadata": {
+        "latency_ms": 2789.79260000051,
+        "grounded": false,
+        "sources": [
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 18
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 2
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 2
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Austin_and_Lila_Accumulator.pdf",
+            "page": 8
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 14
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 3
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 3
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 8
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Austin_and_Lila_Accumulator.pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 1
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 17
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 3
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 3
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 8
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 9
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Austin_and_Lila_Accumulator.pdf",
+            "page": 1
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 1
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Austin_and_Lila_Accumulator.pdf",
+            "page": 9
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 15
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Austin_and_Lila_Accumulator.pdf",
+            "page": 1
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 0
+          }
+        ],
+        "source_count": 25
+      }
+    },
+    {
+      "role": "user",
+      "content": "what is John Smith ssn?",
+      "timestamp": "2026-04-17T12:58:03.635846"
+    },
+    {
+      "role": "assistant",
+      "content": "I cannot find any SSNs in the retrieved documents.",
+      "timestamp": "2026-04-17T12:58:04.307225",
+      "metadata": {
+        "latency_ms": 669.6296000154689,
+        "grounded": false,
+        "sources": [
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Power of Attorney.pdf",
+            "page": 3
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Power of Attorney.pdf",
+            "page": 4
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Power of Attorney.pdf",
+            "page": 6
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Power of Attorney.pdf",
+            "page": 7
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Power of Attorney.pdf",
+            "page": 2
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Power of Attorney.pdf",
+            "page": 5
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\HIPAA Authorization.pdf",
+            "page": 1
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Power of Attorney.pdf",
+            "page": 1
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Revocable Living Trust.pdf",
+            "page": 1
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Last Will and Testament.pdf",
+            "page": 1
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Last Will and Testament.pdf",
+            "page": 10
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Last Will and Testament.pdf",
+            "page": 12
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Last Will and Testament.pdf",
+            "page": 11
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Revocable Living Trust.pdf",
+            "page": 2
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Healtcare Directive.pdf",
+            "page": 1
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Revocable Living Trust.pdf",
+            "page": 21
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Pour Over Will.pdf",
+            "page": 12
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\HIPAA Authorization.pdf",
+            "page": 6
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Pour Over Will.pdf",
+            "page": 15
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Revocable Living Trust.pdf",
+            "page": 19
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Pour Over Will.pdf",
+            "page": 13
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 2
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 2
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Healtcare Directive.pdf",
+            "page": 13
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Revocable Living Trust.pdf",
+            "page": 13
+          }
+        ],
+        "source_count": 25
+      }
+    },
+    {
+      "role": "user",
+      "content": "What tax year is this return for?",
+      "timestamp": "2026-04-17T13:01:06.994519"
+    },
+    {
+      "role": "assistant",
+      "content": "2024",
+      "timestamp": "2026-04-17T13:01:08.566769",
+      "metadata": {
+        "latency_ms": 1570.4940000141505,
+        "grounded": false,
+        "sources": [
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Austin_and_Lila_Accumulator.pdf",
+            "page": 7
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 20
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Austin_and_Lila_Accumulator.pdf",
+            "page": 5
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 19
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 10
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 4
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 4
+          }
+        ],
+        "source_count": 7
+      }
+    },
+    {
+      "role": "user",
+      "content": "What is my filing status?",
+      "timestamp": "2026-04-17T13:01:20.535931"
+    },
+    {
+      "role": "assistant",
+      "content": "Based on the documents provided, your filing status is **Single**. This can be seen in the tax return forms where you have checked the \"Single\" box.",
+      "timestamp": "2026-04-17T13:01:21.664594",
+      "metadata": {
+        "latency_ms": 1127.0003000099678,
+        "grounded": true,
+        "sources": [
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 19
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 20
+          }
+        ],
+        "source_count": 7
+      }
+    }
+  ]
+}

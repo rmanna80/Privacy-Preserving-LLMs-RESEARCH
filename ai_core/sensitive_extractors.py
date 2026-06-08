@@ -1,11 +1,12 @@
 # ai_core/sensitive_extractors.py
 from __future__ import annotations
+
 import re
 from typing import Dict, List, Optional
 from langchain_core.documents import Document
 
 SSN_PATTERN = re.compile(r"\b\d{3}[- ]?\d{2}[- ]?\d{4}\b")
-NAME_PATTERN = re.compile(r"\b[A-Z]{2,}(?:\s+[A-Z]{2,})+\b")
+NAME_PATTERN = re.compile(r"\b[A-Z]{2,}(?:\s+[A-Z]{2,}){1,3}\b")
 
 BLACKLIST = {
     "UNITED STATES",
@@ -18,30 +19,32 @@ BLACKLIST = {
     "ADD LINES",
     "NAME PHONE NO",
     "PHONE NO",
+    "SOCIAL SECURITY",
+    "SOCIAL SECURITY NUMBER",
 }
 
 FORM_WORDS = {
-    'SEE', 'USE', 'FOR', 'THE', 'AND', 'OR', 'IF', 'NOT',
-    'FROM', 'LINE', 'FORM', 'ADD', 'ENTER', 'CHECK', 'FILE',
-    'TAX', 'YOUR', 'YOU', 'DID', 'ARE', 'WAS', 'WILL', 'THIS',
-    'THAT', 'WITH', 'HAVE', 'ONLY', 'ALSO', 'EACH', 'ANY',
-    'TOTAL', 'AMOUNT', 'NUMBER', 'ATTACH', 'SCHEDULE', 'COPY',
-    'PREVIEW', 'POLICY', 'DATE', 'TYPE', 'RATE', 'PLAN',
-    'DIGITAL', 'ASSET', 'EXEMPT', 'INCOME', 'CREDIT', 'TRUST',
-    'ESTATE', 'SOCIAL', 'SECURITY', 'QUALIFIED', 'ORDINARY',
-    'SUBTRACT', 'BLINDNESS', 'INTEREST', 'DIVIDENDS', 'INST',
-    'JOINT', 'RETURN', 'SPOUSE', 'NAME', 'PREPARER', 'EMPLOYED',
-    'FIRM', 'ADDRESS', 'HERE', 'DISTRIBUTION', 'DISTRIBUTIONS',
-    'FOREIGN', 'THEIR', 'IRA', 'PRIVACY', 'ACT', 'PENSIONS',
-    'ANNUITIES', 'BENEFITS', 'SUM', 'ELECTION', 'METHOD',
-    'DISCLOSURE', 'SEPARATE', 'INSTRUCTIONS', 'EARNED', 'RESERVED',
-    'FUTURE', 'LAST', 'WILL', 'REAL', 'STATE', 'ZIP', 'APPROXIMATE',
-    'VALUE', 'FANTASTIC', 'AVE', 'CORPORATE', 'WAY', 'FINANCIAL',
-    'SINGLE', 'MARRIED', 'FILING', 'HEAD', 'HOUSEHOLD', 'SURVIVING',
-    'QUALIFYING', 'DEPENDENT', 'DEDUCTION', 'STANDARD', 'ITEMIZED',
-    'CAPITAL', 'GAIN', 'LOSS', 'SHORT', 'LONG', 'TERM', 'FEDERAL',
-    'WITHHOLD', 'WITHHELD', 'PAYMENT', 'REFUND', 'OWE', 'PENALTY',
-    'OFFICE', 'SERVICE', 'STREET', 'ROAD', 'BLVD', 'DRIVE',
+    "SEE", "USE", "FOR", "THE", "AND", "OR", "IF", "NOT",
+    "FROM", "LINE", "FORM", "ADD", "ENTER", "CHECK", "FILE",
+    "TAX", "YOUR", "YOU", "DID", "ARE", "WAS", "WILL", "THIS",
+    "THAT", "WITH", "HAVE", "ONLY", "ALSO", "EACH", "ANY",
+    "TOTAL", "AMOUNT", "NUMBER", "ATTACH", "SCHEDULE", "COPY",
+    "PREVIEW", "POLICY", "DATE", "TYPE", "RATE", "PLAN",
+    "DIGITAL", "ASSET", "EXEMPT", "INCOME", "CREDIT", "TRUST",
+    "ESTATE", "SOCIAL", "SECURITY", "QUALIFIED", "ORDINARY",
+    "SUBTRACT", "BLINDNESS", "INTEREST", "DIVIDENDS", "INST",
+    "JOINT", "RETURN", "SPOUSE", "NAME", "PREPARER", "EMPLOYED",
+    "FIRM", "ADDRESS", "HERE", "DISTRIBUTION", "DISTRIBUTIONS",
+    "FOREIGN", "THEIR", "IRA", "PRIVACY", "ACT", "PENSIONS",
+    "ANNUITIES", "BENEFITS", "SUM", "ELECTION", "METHOD",
+    "DISCLOSURE", "SEPARATE", "INSTRUCTIONS", "EARNED", "RESERVED",
+    "FUTURE", "LAST", "WILL", "REAL", "STATE", "ZIP", "APPROXIMATE",
+    "VALUE", "FANTASTIC", "AVE", "CORPORATE", "WAY", "FINANCIAL",
+    "SINGLE", "MARRIED", "FILING", "HEAD", "HOUSEHOLD", "SURVIVING",
+    "QUALIFYING", "DEPENDENT", "DEDUCTION", "STANDARD", "ITEMIZED",
+    "CAPITAL", "GAIN", "LOSS", "SHORT", "LONG", "TERM", "FEDERAL",
+    "WITHHOLD", "WITHHELD", "PAYMENT", "REFUND", "OWE", "PENALTY",
+    "OFFICE", "SERVICE", "STREET", "ROAD", "BLVD", "DRIVE",
 }
 
 
@@ -63,17 +66,16 @@ def extract_ssns(text: str) -> List[str]:
 def extract_requested_name(question: str) -> Optional[str]:
     q = question.strip()
 
-    m = re.search(r"([A-Za-z]+(?:\s+[A-Za-z]+){1,3})'s\s+(?:ssn|social security)", q, re.IGNORECASE)
-    if m:
-        return normalize_name(m.group(1))
+    patterns = [
+        r"([A-Za-z]+(?:\s+[A-Za-z]+){1,3})'s\s+(?:ssn|social security)",
+        r"(?:ssn|social security)\s+(?:number\s+)?for\s+([A-Za-z]+(?:\s+[A-Za-z]+){1,3})",
+        r"(?:what\s+is\s+)?([A-Za-z]+(?:\s+[A-Za-z]+){1,3})'s\s+(?:ssn|social security)",
+    ]
 
-    m = re.search(r"(?:ssn|social security)\s+(?:number\s+)?for\s+([A-Za-z]+(?:\s+[A-Za-z]+){1,3})", q, re.I)
-    if m:
-        return normalize_name(m.group(1))
-
-    m = re.search(r"(?:what\s+is\s+)?([A-Za-z]+(?:\s+[A-Za-z]+){1,3})'s\s+(?:ssn|social security)", q, re.I)
-    if m:
-        return normalize_name(m.group(1))
+    for pattern in patterns:
+        m = re.search(pattern, q, re.IGNORECASE)
+        if m:
+            return normalize_name(m.group(1))
 
     return None
 
@@ -81,51 +83,126 @@ def extract_requested_name(question: str) -> Optional[str]:
 def best_name_match(target: str, candidates: List[str]) -> Optional[str]:
     if not target:
         return None
+
     target = normalize_name(target)
+    target_parts = set(target.split())
 
     if target in candidates:
         return target
 
-    for c in candidates:
-        if target in c or c in target:
-            return c
-    return None
+    best_candidate = None
+    best_score = 0
+
+    for candidate in candidates:
+        candidate_norm = normalize_name(candidate)
+        candidate_parts = set(candidate_norm.split())
+
+        if target in candidate_norm or candidate_norm in target:
+            return candidate
+
+        overlap = len(target_parts.intersection(candidate_parts))
+        if overlap > best_score:
+            best_score = overlap
+            best_candidate = candidate
+
+    return best_candidate if best_score >= 2 else None
 
 
-def _is_person_name(name: str) -> bool:
-    """Return True if name looks like a real 2-word person name."""
-    words = name.split()
-    if len(words) != 2:
-        return False
-    for word in words:
-        if len(word) < 2:
-            return False
-        if not word.isalpha():
-            return False
-        if word in FORM_WORDS:
-            return False
-    return True
-
-
-def _is_last_name_only(word: str) -> bool:
-    """Return True if a single word could be a last name."""
-    word = word.strip()
+def _is_valid_name_word(word: str) -> bool:
     return (
         word.isalpha()
-        and len(word) >= 3
+        and len(word) >= 2
         and word not in FORM_WORDS
         and word not in BLACKLIST
     )
 
 
+def _is_person_name(name: str) -> bool:
+    """
+    Accept likely person names with 2 to 4 words.
+    Example:
+    - JOHN SMITH
+    - JOHN A SMITH
+    - MARY ANN JONES
+    """
+    words = name.split()
+    if not (2 <= len(words) <= 4):
+        return False
+
+    valid_words = [w for w in words if _is_valid_name_word(w)]
+    return len(valid_words) >= 2
+
+
+def _is_last_name_only(word: str) -> bool:
+    word = word.strip()
+    return _is_valid_name_word(word) and len(word) >= 3
+
+
+def _extract_candidate_names_from_line(line: str) -> List[str]:
+    raw_names = NAME_PATTERN.findall(line)
+    names: List[str] = []
+
+    for raw in raw_names:
+        name = normalize_name(raw)
+        if name in BLACKLIST:
+            continue
+        if _is_person_name(name):
+            names.append(name)
+
+    return list(dict.fromkeys(names))
+
+
+def _is_ssn_only_line(line: str) -> bool:
+    return bool(re.match(r"^\s*\d{3}[- ]?\d{2}[- ]?\d{4}\s*$", line.strip()))
+
+
+def _extract_name_from_previous_lines(lines: List[str], ssn_index: int) -> Optional[str]:
+    """
+    Look back up to 4 lines to reconstruct a likely name.
+    Handles patterns like:
+    - JOHN SMITH
+    - JOHN / SMITH
+    - JOHN A / SMITH
+    """
+    window_start = max(0, ssn_index - 4)
+    previous_lines = [lines[i].strip() for i in range(window_start, ssn_index)]
+
+    # First try: exact multi-word name on any prior line
+    for line in reversed(previous_lines):
+        candidates = _extract_candidate_names_from_line(line)
+        if candidates:
+            return candidates[0]
+
+    # Second try: combine adjacent lines, e.g. JOHN + SMITH
+    for i in range(len(previous_lines) - 1):
+        left = normalize_name(previous_lines[i])
+        right = normalize_name(previous_lines[i + 1])
+
+        if not left or not right:
+            continue
+
+        if " " not in left and " " not in right:
+            combined = f"{left} {right}"
+            if _is_person_name(combined):
+                return combined
+
+        # Example: "JOHN A" + "SMITH"
+        if " " in left and " " not in right:
+            combined = f"{left} {right}"
+            if _is_person_name(combined):
+                return combined
+
+    return None
+
+
 def build_name_ssn_pairs_from_docs(docs: List[Document]) -> Dict[str, str]:
     """
-    Build name->SSN pairs processing each document page individually.
+    Build name -> SSN pairs from retrieved documents.
 
-    Handles three IRS form layouts:
-    1) Same line:    "JOHN SMITH 111 11 1111"
-    2) Split lines:  line N-1="JOHN", line N="SMITH", line N+1="111 11 1111"
-    3) Proximity:    name line followed by SSN within 3 lines
+    Strategies:
+    1) Same line:      JOHN SMITH 111-11-1111
+    2) SSN-only line:  look back across prior lines for a likely name
+    3) Nearby line:    name line followed by SSN within the next few lines
     """
     pairs: Dict[str, str] = {}
 
@@ -135,80 +212,40 @@ def build_name_ssn_pairs_from_docs(docs: List[Document]) -> Dict[str, str]:
 
         for i, line in enumerate(lines):
             stripped = line.strip()
-            if not stripped:
+            if not stripped or "&" in line:
                 continue
 
             ssns = SSN_PATTERN.findall(line)
 
-            # ── Strategy 1: Same-line pairing ──────────────────────────────
-            if ssns and "&" not in line:
-                raw_names = NAME_PATTERN.findall(line)
-                names = []
-                for n in raw_names:
-                    n = normalize_name(n)
-                    if n in BLACKLIST:
-                        continue
-                    if _is_person_name(n):
-                        names.append(n)
-
-                if len(names) == 1 and len(ssns) == 1:
-                    name, ssn = names[0], ssns[0]
-                    if name not in pairs:
-                        pairs[name] = ssn
-                        print(f"[DEBUG] Same-line paired: {name} -> {ssn}")
+            # Strategy 1: same line name + SSN
+            if ssns:
+                names = _extract_candidate_names_from_line(line)
+                if len(names) == 1 and len(ssns) >= 1:
+                    if names[0] not in pairs:
+                        pairs[names[0]] = ssns[0]
                     continue
 
-            # ── Strategy 2: SSN-only line → reconstruct name from prior lines
-            is_ssn_only = bool(re.match(r'^\s*\d{3}[- ]?\d{2}[- ]?\d{4}\s*$', line))
-            if is_ssn_only and "&" not in line:
-                ssn = SSN_PATTERN.search(line).group(0)
+            # Strategy 2: SSN-only line, reconstruct name from previous lines
+            if _is_ssn_only_line(line):
+                ssn_match = SSN_PATTERN.search(line)
+                if ssn_match:
+                    name = _extract_name_from_previous_lines(lines, i)
+                    if name and name not in pairs:
+                        pairs[name] = ssn_match.group(0)
+                continue
 
-                # Look back: expect pattern like:
-                # i-2: "JOHN"  (first name)
-                # i-1: "SMITH" (last name)
-                # i:   "111 11 1111" (SSN)
-                last_name = None
-                first_name = None
-
-                if i >= 1:
-                    prev1 = lines[i - 1].strip()
-                    if re.match(r'^[A-Z]{2,}$', prev1) and _is_last_name_only(prev1):
-                        last_name = prev1
-
-                if last_name and i >= 2:
-                    prev2 = lines[i - 2].strip()
-                    # Could be "JOHN" or "JOHN MIDDLENAME" — take first word
-                    parts = prev2.split()
-                    if parts and re.match(r'^[A-Z]{2,}$', parts[0]) and parts[0] not in FORM_WORDS:
-                        first_name = parts[0]
-
-                if first_name and last_name:
-                    full_name = f"{first_name} {last_name}"
-                    if _is_person_name(full_name) and full_name not in pairs:
-                        pairs[full_name] = ssn
-                        print(f"[DEBUG] Split-line paired: {full_name} -> {ssn}")
-                    continue
-
-            # ── Strategy 3: Proximity pairing ──────────────────────────────
-            if not ssns and "&" not in line:
-                raw_names = NAME_PATTERN.findall(line)
-                names = []
-                for n in raw_names:
-                    n = normalize_name(n)
-                    if n in BLACKLIST:
+            # Strategy 3: name on current line, SSN in next 1-4 lines
+            names = _extract_candidate_names_from_line(line)
+            if names:
+                for k in range(i + 1, min(i + 5, len(lines))):
+                    future_line = lines[k]
+                    if "&" in future_line:
                         continue
-                    if _is_person_name(n):
-                        names.append(n)
+                    ahead_ssns = SSN_PATTERN.findall(future_line)
+                    if ahead_ssns:
+                        for name in names:
+                            if name not in pairs:
+                                pairs[name] = ahead_ssns[0]
+                        break
 
-                if names:
-                    for k in range(i + 1, min(i + 4, len(lines))):
-                        ahead_ssns = SSN_PATTERN.findall(lines[k])
-                        if ahead_ssns and "&" not in lines[k]:
-                            for name in names:
-                                if name not in pairs:
-                                    pairs[name] = ahead_ssns[0]
-                                    print(f"[DEBUG] Proximity paired: {name} -> {ahead_ssns[0]}")
-                            break
-
-    print(f"[DEBUG] Final pairs: {pairs}")
     return pairs

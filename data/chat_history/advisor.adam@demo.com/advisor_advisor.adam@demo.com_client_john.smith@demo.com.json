@@ -1,0 +1,107 @@
+{
+  "chat_id": "advisor::advisor.adam@demo.com::client::john.smith@demo.com",
+  "timestamp": "2026-04-29T15:43:42.140962",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the ssn for John Smith?",
+      "timestamp": "2026-04-29T15:43:42.134516"
+    },
+    {
+      "role": "assistant",
+      "content": "111 11 1111",
+      "timestamp": "2026-04-29T15:43:42.140732",
+      "metadata": {
+        "latency_ms": 5.12120001076255,
+        "grounded": true,
+        "sources": [
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 1
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 1
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 1
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 2
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 2
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 2
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 3
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 3
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 3
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 3
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 4
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 4
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 4
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 4
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 4
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 5
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 5
+          }
+        ],
+        "source_count": 21
+      }
+    }
+  ]
+}

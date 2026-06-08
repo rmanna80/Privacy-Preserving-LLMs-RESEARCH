@@ -1,115 +1,193 @@
-# ai_core/pdf_loader.py
-
 from __future__ import annotations
 
+import logging
+import os
 from pathlib import Path
 from typing import List
 
-from .sensitive_extractors import SSN_PATTERN
-from PIL import Image
-import pytesseract
-
-
-import sys
-
 import fitz  # PyMuPDF
+import pytesseract
+from PIL import Image
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-# Configure Tesseract path for Windows
-if sys.platform == "win32":
-    # Update this path if you installed Tesseract somewhere else
-    pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-print(pytesseract.get_tesseract_version())
+from .sensitive_extractors import SSN_PATTERN
 
-def load_pdfs(pdf_dir: str | Path) -> List[Document]:
+logger = logging.getLogger(__name__)
+
+
+def configure_tesseract() -> None:
     """
-    Load all PDFs from a directory into LangChain Documents using PyMuPDF.
-    This usually extracts more reliably from IRS-style forms than pypdf.
+    Configure pytesseract from environment when provided.
+
+    Expected environment variable:
+    - TESSERACT_CMD
     """
+    tesseract_cmd = os.getenv("TESSERACT_CMD")
+    if tesseract_cmd:
+        pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
+        logger.info("Configured Tesseract from TESSERACT_CMD.")
+
+
+def _validate_pdf_dir(pdf_dir: str | Path) -> Path:
     pdf_dir = Path(pdf_dir)
     if not pdf_dir.exists():
         raise FileNotFoundError(f"Directory not found: {pdf_dir}")
+    if not pdf_dir.is_dir():
+        raise NotADirectoryError(f"Path is not a directory: {pdf_dir}")
+    return pdf_dir
 
+
+def _extract_page_text(page) -> str:
+    return (page.get_text("text") or "").strip()
+
+
+def _ocr_page(page, dpi: int = 300) -> str:
+    pix = page.get_pixmap(dpi=dpi)
+    image_mode = "RGB" if pix.alpha == 0 else "RGBA"
+    image = Image.frombytes(image_mode, [pix.width, pix.height], pix.samples)
+    return pytesseract.image_to_string(image).strip()
+
+
+def _should_use_ocr(
+    text: str,
+    page_idx: int,
+    ocr_strategy: str,
+    ocr_first_n_pages: int,
+) -> bool:
+    """
+    Decide whether OCR should run for a page.
+
+    Supported strategies:
+    - "never": never OCR
+    - "always_first_n": OCR the first N pages regardless
+    - "low_text": OCR when extracted text is very sparse
+    - "ssn_fallback": OCR early pages when SSN-like content appears missing
+    """
+    if ocr_strategy == "never":
+        return False
+
+    if page_idx >= ocr_first_n_pages:
+        return False
+
+    if ocr_strategy == "always_first_n":
+        return True
+
+    if ocr_strategy == "low_text":
+        return len(text.strip()) < 40
+
+    if ocr_strategy == "ssn_fallback":
+        ssn_count = len(SSN_PATTERN.findall(text))
+        return ssn_count < 2
+
+    return False
+
+
+def load_pdfs(pdf_dir: str | Path) -> List[Document]:
+    """
+    Load all PDFs from a directory using direct PyMuPDF text extraction.
+    """
+    pdf_dir = _validate_pdf_dir(pdf_dir)
     docs: List[Document] = []
 
     for pdf_path in sorted(pdf_dir.glob("*.pdf")):
-        print(f"Loading: {pdf_path.name}")
+        logger.info("Loading PDF: %s", pdf_path.name)
         pdf = fitz.open(str(pdf_path))
         try:
             for page_idx in range(len(pdf)):
-                text = pdf[page_idx].get_text("text") or ""
+                text = _extract_page_text(pdf[page_idx])
                 docs.append(
                     Document(
                         page_content=text,
-                        metadata={"source": str(pdf_path), "page": page_idx},
+                        metadata={
+                            "source": str(pdf_path),
+                            "page": page_idx,
+                            "extraction_method": "text",
+                        },
                     )
                 )
         finally:
             pdf.close()
 
-    print(f"Loaded {len(docs)} raw pages from {pdf_dir}")
+    logger.info("Loaded %d raw pages from %s", len(docs), pdf_dir)
     return docs
 
 
-def load_pdfs_hybrid(pdf_dir: str | Path) -> List[Document]:
+def load_pdfs_hybrid(
+    pdf_dir: str | Path,
+    *,
+    ocr_enabled: bool = True,
+    ocr_strategy: str = "low_text",
+    ocr_first_n_pages: int = 2,
+    ocr_dpi: int = 300,
+) -> List[Document]:
     """
-    Try text extraction first, use OCR as fallback if SSN pattern not found.
+    Hybrid PDF loading:
+    - try direct text extraction first
+    - optionally OCR selected pages as fallback
+
+    Parameters
+    ----------
+    ocr_enabled:
+        Whether OCR fallback is allowed.
+    ocr_strategy:
+        One of: "never", "always_first_n", "low_text", "ssn_fallback"
+    ocr_first_n_pages:
+        Only consider OCR for the first N pages.
+    ocr_dpi:
+        DPI used for page rasterization before OCR.
     """
-    pdf_dir = Path(pdf_dir)
+    configure_tesseract()
+    pdf_dir = _validate_pdf_dir(pdf_dir)
     docs: List[Document] = []
 
     for pdf_path in sorted(pdf_dir.glob("*.pdf")):
-        print(f"Loading: {pdf_path.name}")
+        logger.info("Loading PDF: %s", pdf_path.name)
         pdf = fitz.open(str(pdf_path))
-        
-        for page_idx in range(len(pdf)):
-            page = pdf[page_idx]
-            
-            # Try normal text extraction first
-            text = page.get_text("text") or ""
-            
-            # Check if we got SSNs
-            ssn_count = len(SSN_PATTERN.findall(text))
-            
-            # If we found fewer than 2 SSNs on page 0, try OCR
-            if page_idx == 0 and ssn_count < 2:
-                print(f"  Page {page_idx}: Only found {ssn_count} SSN(s), trying OCR...")
-                pix = page.get_pixmap(dpi=300)
-                img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-                text = pytesseract.image_to_string(img)
-                ssn_count_ocr = len(SSN_PATTERN.findall(text))
-                print(f"  OCR found {ssn_count_ocr} SSN(s)")
-                
-                # ADD THIS DEBUG - Check for the Smith document
-                if "Smith" in pdf_path.name:  # Changed from "John_and_Sally"
-                    print("\n" + "="*80)
-                    print(f"[DEBUG OCR OUTPUT for {pdf_path.name}]")
-                    print("="*80)
-                    print("First 2000 characters of OCR text:")
-                    print(text[:2000])
-                    print("\n" + "="*80)
-                    print("[DEBUG] Searching for '111' in OCR text:", '111' in text)
-                    print("[DEBUG] Searching for '222' in OCR text:", '222' in text)
-                    print("[DEBUG] Searching for 'JOHN' in OCR text:", 'JOHN' in text)
-                    print("[DEBUG] Searching for 'SALLY' in OCR text:", 'SALLY' in text)
-                    
-                    # Show context around SALLY
-                    if 'SALLY' in text.upper():
-                        idx = text.upper().find('SALLY')
-                        print(f"\n[DEBUG] Text around SALLY in OCR:")
-                        print(text[max(0, idx-100):idx+300])
-                    print("="*80 + "\n")
-            
-            docs.append(
-                Document(
-                    page_content=text,
-                    metadata={"source": str(pdf_path), "page": page_idx}
-                )
-            )
-        
-        pdf.close()
+        try:
+            for page_idx in range(len(pdf)):
+                page = pdf[page_idx]
+                text = _extract_page_text(page)
+                extraction_method = "text"
 
+                if ocr_enabled and _should_use_ocr(
+                    text=text,
+                    page_idx=page_idx,
+                    ocr_strategy=ocr_strategy,
+                    ocr_first_n_pages=ocr_first_n_pages,
+                ):
+                    try:
+                        ocr_text = _ocr_page(page, dpi=ocr_dpi)
+                        if len(ocr_text.strip()) > len(text.strip()):
+                            text = ocr_text
+                            extraction_method = "ocr"
+                            logger.info(
+                                "OCR used for %s page %s",
+                                pdf_path.name,
+                                page_idx,
+                            )
+                    except Exception as exc:
+                        logger.warning(
+                            "OCR failed for %s page %s: %s",
+                            pdf_path.name,
+                            page_idx,
+                            exc,
+                        )
+
+                docs.append(
+                    Document(
+                        page_content=text,
+                        metadata={
+                            "source": str(pdf_path),
+                            "page": page_idx,
+                            "extraction_method": extraction_method,
+                        },
+                    )
+                )
+        finally:
+            pdf.close()
+
+    logger.info("Loaded %d pages from %s using hybrid extraction", len(docs), pdf_dir)
     return docs
 
 
@@ -119,10 +197,10 @@ def split_documents(
     chunk_overlap: int = 150,
 ) -> List[Document]:
     """
-    Split documents into overlapping chunks suitable for retrieval later.
+    Split documents into overlapping chunks for retrieval.
     """
     if not docs:
-        print("No documents to split.")
+        logger.info("No documents to split.")
         return []
 
     splitter = RecursiveCharacterTextSplitter(
@@ -131,8 +209,12 @@ def split_documents(
         add_start_index=True,
     )
     chunks = splitter.split_documents(docs)
-    print(
-        f"Split {len(docs)} docs into {len(chunks)} chunks "
-        f"(chunk_size={chunk_size}, overlap={chunk_overlap})"
+
+    logger.info(
+        "Split %d docs into %d chunks (chunk_size=%d, overlap=%d)",
+        len(docs),
+        len(chunks),
+        chunk_size,
+        chunk_overlap,
     )
     return chunks

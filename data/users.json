@@ -1,12 +1,20 @@
 {
   "admin@demo.com": {
-    "password": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+    "password": {
+      "scheme": "pbkdf2_sha256",
+      "salt": "8626a8eae6b7cd62833a9dc60e0e2f4c",
+      "hash": "4de1e35190ee7e4eb761ee02225f9008ef7ccd6c80c83d92a59e14e09f677c56"
+    },
     "role": "super_admin",
     "name": "System Administrator",
     "advisor_id": null
   },
   "advisor.adam@demo.com": {
-    "password": "ba3f11752051adbe676a006ca8eb470bcd5981164595590c2aad9a8646c08164",
+    "password": {
+      "scheme": "pbkdf2_sha256",
+      "salt": "c7cd5e88ad878e2283bc4539d3a8817b",
+      "hash": "a8049dc13128af35bb32f0215c5a740f1201fde3a21373db0355140ef0f5f3c0"
+    },
     "role": "advisor",
     "name": "Adam Advisor",
     "advisor_id": null
@@ -18,7 +26,11 @@
     "advisor_id": null
   },
   "john.smith@demo.com": {
-    "password": "186474c1f2c2f735a54c2cf82ee8e87f2a5cd30940e280029363fecedfc5328c",
+    "password": {
+      "scheme": "pbkdf2_sha256",
+      "salt": "58f1ce346cd13a68ac702e9e957b0180",
+      "hash": "70684d56ccf8a292701c0bba4703c1707b527f8fbbbef4dffb0711f92a27a0d4"
+    },
     "role": "client",
     "name": "John Smith",
     "advisor_id": "advisor.adam@demo.com"

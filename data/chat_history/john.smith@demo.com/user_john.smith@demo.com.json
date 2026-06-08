@@ -1,0 +1,51 @@
+{
+  "chat_id": "user_john.smith@demo.com",
+  "timestamp": "2026-06-07T20:25:08.577150",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What documents do you have for me?",
+      "timestamp": "2026-06-07T20:25:06.194267"
+    },
+    {
+      "role": "assistant",
+      "content": "I have the following documents for you:\n\n1. **Healthcare Directive**: This document includes a release and discharge clause related to your Health Care Agent's actions.\n2. **HIPAA Authorization**: Instructions for reviewing, signing, and notarizing (if desired) this document.\n3. **Tax Return Information for John and Sally Smith**:\n   - Filing status, digital assets, standard deduction, age/blindness information.\n4. **Tax Return Information for Peter and Paula Professor**:\n   - Similar to the previous one but also includes questions about foreign financial accounts and foreign trusts.\n5. **Tax Return Information for Austin and Lila Accumulator**: Contains similar details as the first two tax return documents.\n\nThese are the key documents I have access to based on the provided excerpts.",
+      "timestamp": "2026-06-07T20:25:08.576790",
+      "metadata": {
+        "latency_ms": 2380.8281999999963,
+        "grounded": true,
+        "sources": [
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\Healtcare Directive.pdf",
+            "page": 8
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\HIPAA Authorization.pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith (1).pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_John_and_Sally_Smith.pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 8
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Austin_and_Lila_Accumulator.pdf",
+            "page": 0
+          },
+          {
+            "source": "D:\\Owner\\Documents\\Privacy-Preserving-LLMs-RESEARCH\\data\\advisors\\advisor.adam@demo.com\\clients\\john.smith@demo.com\\2024_Peter_and_Paula_Professor.pdf",
+            "page": 0
+          }
+        ],
+        "source_count": 7
+      }
+    }
+  ]
+}
