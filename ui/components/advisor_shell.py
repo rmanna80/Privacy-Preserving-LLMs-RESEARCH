@@ -55,6 +55,7 @@ from ui.components.family_manager import (
 from ui.components.family_tree import render_family_tree
 from ui.components.advisory_team import render_advisory_team_page
 from ui.components.tasks import render_tasks_page, render_my_tasks_page
+from ui.components.documents import render_documents_page
 from ui.theme import inject_theme, render_brand_header, Color
 
 
@@ -542,21 +543,8 @@ def _render_advisory_team(family_id: int) -> None:
 
 
 def _render_documents_family_scope(family_id: int) -> None:
-    _coming_soon(
-        title="Documents",
-        description="Every document for this family, categorized for fast retrieval.",
-        will_do=[
-            "Upload documents into named categories: Investments · Estate "
-            "Planning · Tax Planning · Insurance Planning · Business Planning",
-            "Create subfolders inside each category",
-            "Tag each document to a specific person or entity",
-            "Auto-remind on cadence: tax returns annually, investment "
-            "statements quarterly, estate / insurance / business docs on "
-            "update",
-            "View, search, and chat against any uploaded document",
-        ],
-        phase="Phase 4 — Document Intelligence (the big one)",
-    )
+    user = st.session_state.get("user")
+    render_documents_page(family_id, user)
 
 
 # Top-level stubs
@@ -597,81 +585,86 @@ def _render_reports_view(user) -> None:
 
 
 def _render_chat_history_view(user) -> None:
+    """Advisor Chat History — pick a family, then chat about its documents."""
     from ui.chat_bridge import (
         ensure_chat_session_state,
         get_or_build_qa,
-        load_chat_for_context, 
+        load_chat_for_context,
         save_chat_for_context,
         chat_context_key,
     )
     from ui.components.chat_interface import render_chat_interface
-    from ui.auth import AuthSystem
+    from db.repositories import list_families_for_advisor, ensure_db_user
 
     ensure_chat_session_state()
+    advisor_db_id = ensure_db_user(user)
 
     st.markdown("# Chat")
     st.caption(
-        "Ask Angel anything about your client's documents. Each client "
-        "has their own conversation — switch between them below."
+        "Ask Angel about any of your families' documents. Pick a family "
+        "below — chat is scoped to that family's library."
     )
     st.markdown("---")
 
-    # Client selector — advisor's chat is scoped to one client at a time
-    auth = AuthSystem()
-    clients = auth.get_clients_for_advisor(user.username)
-
-    if not clients:
-        st.info("You have no clients assigned to ask about yet.")
+    families = list_families_for_advisor(advisor_db_id)
+    if not families:
+        st.info("You have no families yet. Create one first.")
         return
 
-    client_options = {f"{c.client_name} ({c.username})": c.username for c in clients}
-    labels = list(client_options.keys())
+    family_options = {f.name: f.id for f in families}
+    labels = list(family_options.keys())
 
-    # Default to previously selected client, or the first one
-    existing = st.session_state.get("selected_client_username") or clients[0].username
+    # Default to the family currently selected elsewhere in the UI
+    existing_family_id = st.session_state.get("selected_family_id")
     default_idx = 0
-    for idx, label in enumerate(labels):
-        if client_options[label] == existing:
-            default_idx = idx
-            break
+    if existing_family_id is not None:
+        for i, label in enumerate(labels):
+            if family_options[label] == existing_family_id:
+                default_idx = i
+                break
 
-    selected_label = st.selectbox("Chat about which client?", labels, index=default_idx)
-    selected_client_username = client_options[selected_label]
+    picked_label = st.selectbox(
+        "Chat about which family?",
+        labels,
+        index=default_idx,
+    )
+    family_id = family_options[picked_label]
 
-    # If switched, swap chat history and invalidate the QA system
-    previous = st.session_state.get("selected_client_username")
-    if previous != selected_client_username:
-        if previous is not None:
-            save_chat_for_context(user, previous)
-        st.session_state.selected_client_username = selected_client_username
+    # When the user switches families, invalidate the cached QA + history
+    prev_family_id = st.session_state.get("chat_active_family_id")
+    if prev_family_id != family_id:
+        if prev_family_id is not None:
+            save_chat_for_context(user, family_id=prev_family_id)
+        st.session_state.chat_active_family_id = family_id
         st.session_state.qa_system = None
         st.session_state.qa_owner = None
-        load_chat_for_context(user, selected_client_username)
+        load_chat_for_context(user, family_id=family_id)
         st.rerun()
 
-    # Ensure current context's history is loaded
-    if st.session_state.get("current_chat_id") != chat_context_key(user, selected_client_username):
-        load_chat_for_context(user, selected_client_username)
+    expected_key = chat_context_key(user, family_id=family_id)
+    if st.session_state.get("current_chat_id") != expected_key:
+        load_chat_for_context(user, family_id=family_id)
 
-    # Initialize QA for the selected client
-    qa_system = get_or_build_qa(user, selected_client_username=selected_client_username)
+    qa_system = get_or_build_qa(user, family_id=family_id)
 
     if qa_system is None:
-        st.warning("Could not initialize AI for this client.")
+        st.warning("Could not initialize family AI.")
         return
 
     if qa_system.vector_store is None:
         st.info(
-            "📭 No documents are loaded for this client yet. "
-            "Upload documents to begin asking questions about them."
+            f"📭 No documents have been indexed for {picked_label} yet. "
+            f"Upload documents in the Documents tab first."
         )
         return
 
-    # New Chat button
     if st.button("➕ New Chat", key="advisor_new_chat"):
         st.session_state.chat_history = []
+        key = chat_context_key(user, family_id=family_id)
+        if key in st.session_state.chat_histories:
+            del st.session_state.chat_histories[key]
         st.session_state.current_chat_id = None
         st.rerun()
 
     render_chat_interface(user, qa_system)
-    save_chat_for_context(user, selected_client_username)
+    save_chat_for_context(user, family_id=family_id)

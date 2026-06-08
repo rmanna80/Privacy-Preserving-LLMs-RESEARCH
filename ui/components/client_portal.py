@@ -300,7 +300,7 @@ def _coming_soon(title: str, description: str, will_do: list[str]) -> None:
 
 
 def _render_client_chat(user, family_id: int) -> None:
-    """Render the chat interface for a client."""
+    """Render the chat interface for a client, scoped to their family."""
     from ui.chat_bridge import (
         ensure_chat_session_state,
         get_or_build_qa,
@@ -314,12 +314,15 @@ def _render_client_chat(user, family_id: int) -> None:
 
     st.markdown("### Chat")
     st.caption(
-        "Ask Angel anything about your documents. Your conversations are "
-        "private to you — they never leave your advisor's local system."
+        "Ask Angel anything about your family's documents. Your "
+        "conversations stay private to your family — they never leave "
+        "your advisor's local system."
     )
     st.markdown("---")
 
-    qa_system = get_or_build_qa(user)
+    # Family-scoped QA — uses documents from the new Documents table,
+    # tagged with this family_id.
+    qa_system = get_or_build_qa(user, family_id=family_id)
 
     if qa_system is None:
         st.warning("No AI system is ready yet. Contact your advisor.")
@@ -327,33 +330,24 @@ def _render_client_chat(user, family_id: int) -> None:
 
     if qa_system.vector_store is None:
         st.info(
-            "📭 No documents are loaded yet. Your advisor needs to upload "
-            "your documents before you can ask questions about them."
+            "📭 No documents have been uploaded for your family yet. "
+            "Your advisor needs to upload documents before you can ask "
+            "questions about them."
         )
         return
 
-    # CRITICAL: Only load chat history from chat_histories dict when we
-    # first enter this context (or after a New Chat). On subsequent reruns
-    # within the same context, session_state.chat_history is the source of
-    # truth — we must NOT overwrite it with the stale chat_histories dict,
-    # or every answer the user sees will disappear on the next rerun.
-    expected_key = chat_context_key(user)
+    # Only load when context changes (otherwise rerun wipes the live thread)
+    expected_key = chat_context_key(user, family_id=family_id)
     if st.session_state.get("current_chat_id") != expected_key:
-        load_chat_for_context(user)
+        load_chat_for_context(user, family_id=family_id)
 
-    # New Chat button — clears the live thread and resets context
     if st.button("➕ New Chat", key="client_new_chat"):
-        # Wipe both the live history AND the saved context, otherwise the
-        # next render's load_chat_for_context will restore the old thread.
         st.session_state.chat_history = []
-        key = chat_context_key(user)
+        key = chat_context_key(user, family_id=family_id)
         if key in st.session_state.chat_histories:
             del st.session_state.chat_histories[key]
         st.session_state.current_chat_id = None
         st.rerun()
-    render_chat_interface(user, qa_system)
 
-    # Save AFTER rendering so chat_histories dict stays in sync with the
-    # latest chat_history. Important for context switches and "go back to
-    # chat history" flows.
-    save_chat_for_context(user)
+    render_chat_interface(user, qa_system)
+    save_chat_for_context(user, family_id=family_id)

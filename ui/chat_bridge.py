@@ -1,22 +1,17 @@
 """
-ui/chat_bridge.py
+ui/chat_bridge.py — updated for sub-phase 4c family-scoped chat.
 
-A tiny bridge module that reuses the existing initialize_qa_system() from
-ui/app.py — but exposes it without creating a circular import (since app.py
-imports components, and the new chat-enabled components need to call back
-into app.py's logic).
+Now supports two paths:
+  - LEGACY (per-client docs folder): same as before. Used by clients that
+    don't have a family_id in their session (admin docs, or transition
+    state). Stays around for compatibility.
+  - FAMILY-SCOPED: when a family_id is in session_state, the chat uses
+    FamilyQASystem reading from data/chroma/family_<id>/, which is built
+    from the new Document table via reindex_family().
 
-Why this file exists
---------------------
-The existing initialize_qa_system() in ui/app.py works perfectly. But:
-  - app.py imports advisor_shell, client_portal, etc.
-  - If those new chat-using components tried to import from app.py,
-    we'd have a circular import.
-
-So we duplicate the small initialization logic here, in a module nobody
-else imports from. Net code addition: ~40 lines, zero changes to app.py.
-
-This also gives us one clean place to add family-scoped chat later (Phase 4).
+Routing rule:
+  If a family_id is known for the current user context, use FamilyQASystem.
+  Otherwise fall back to the legacy FinancialQASystem.
 """
 
 from __future__ import annotations
@@ -48,15 +43,35 @@ def ensure_chat_session_state() -> None:
 def get_or_build_qa(
     user,
     selected_client_username: Optional[str] = None,
-) -> Optional[FinancialQASystem]:
-    """Return a ready FinancialQASystem for the given context.
+    family_id: Optional[int] = None,
+):
+    """Return a ready QA system for the given context.
 
-    Reuses an existing cached instance when the (user, client) scope hasn't
-    changed. Otherwise rebuilds. Mirrors initialize_qa_system() in app.py —
-    kept in sync intentionally so behavior matches the original chat tab.
+    If family_id is given, returns a FamilyQASystem scoped to that family's
+    Document table rows. Otherwise falls back to the legacy per-client
+    FinancialQASystem.
+
+    Reuses cached instance when the scope key matches.
     """
     auth = AuthSystem()
 
+    # ─── Family-scoped path (new in 4c) ───────────────────────────────
+    if family_id is not None:
+        owner_key = f"family::{family_id}"
+        current_owner = st.session_state.get("qa_owner")
+        current_system = st.session_state.get("qa_system")
+        if current_system is not None and current_owner == owner_key:
+            return current_system
+
+        with st.spinner("Loading family AI index…"):
+            from ai_core.family_qa import FamilyQASystem
+            system = FamilyQASystem(family_id=family_id, verbose=False)
+            system.index_documents(force_rebuild=False)
+            st.session_state.qa_system = system
+            st.session_state.qa_owner = owner_key
+            return system
+
+    # ─── Legacy per-client path ───────────────────────────────────────
     if user.is_advisor():
         if not selected_client_username:
             return None
@@ -85,7 +100,7 @@ def get_or_build_qa(
     if current_system is not None and current_owner == owner_key:
         return current_system
 
-    with st.spinner("Loading AI system..."):
+    with st.spinner("Loading AI system…"):
         system = FinancialQASystem(
             docs_dir=str(docs_dir),
             db_dir=str(db_dir),
@@ -102,20 +117,26 @@ def get_or_build_qa(
 def chat_context_key(
     user,
     selected_client_username: Optional[str] = None,
+    family_id: Optional[int] = None,
 ) -> str:
-    """A stable key identifying the current chat scope. Used to load/save
-    chat_history into chat_histories[key]."""
+    """A stable key identifying the current chat scope.
+
+    Windows-filename-safe (no colons or other reserved chars).
+    """
+    if family_id is not None:
+        return f"family_{family_id}"
     if user.is_advisor() and selected_client_username:
-        return f"advisor::{user.username}::client::{selected_client_username}"
+        return f"advisor_{user.username}_client_{selected_client_username}"
     return f"user_{user.username}"
 
 
 def load_chat_for_context(
     user,
     selected_client_username: Optional[str] = None,
+    family_id: Optional[int] = None,
 ) -> None:
     """Pull the right history into st.session_state.chat_history."""
-    key = chat_context_key(user, selected_client_username)
+    key = chat_context_key(user, selected_client_username, family_id)
     st.session_state.chat_history = (
         st.session_state.chat_histories.get(key, []).copy()
     )
@@ -125,9 +146,10 @@ def load_chat_for_context(
 def save_chat_for_context(
     user,
     selected_client_username: Optional[str] = None,
+    family_id: Optional[int] = None,
 ) -> None:
     """Persist current chat_history into chat_histories[key]."""
-    key = chat_context_key(user, selected_client_username)
+    key = chat_context_key(user, selected_client_username, family_id)
     st.session_state.chat_histories[key] = (
         st.session_state.get("chat_history", []).copy()
     )

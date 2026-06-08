@@ -291,6 +291,10 @@ class Document(SQLModel, table=True):
     extraction_status: str = "pending"
     # 'pending' | 'processing' | 'complete' | 'failed'
 
+    category: Optional[str] = None
+    # 'investments' | 'estate_planning' | 'tax_planning'
+    # | 'insurance_planning' | 'business_planning'
+
     notes: Optional[str] = None
     uploaded_at: datetime = Field(default_factory=datetime.utcnow)
     uploaded_by_user_id: Optional[int] = Field(default=None, foreign_key="users.id")

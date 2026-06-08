@@ -1,0 +1,51 @@
+{
+  "chat_id": "family_2",
+  "timestamp": "2026-06-08T13:55:06.270491",
+  "messages": [
+    {
+      "role": "user",
+      "content": "what is the Power of Attorney?",
+      "timestamp": "2026-06-08T13:54:59.011751"
+    },
+    {
+      "role": "assistant",
+      "content": "The Power of Attorney document you provided is a Uniform Statutory Form Power of Attorney for John Smith, dated July 02, 2020. This form grants broad and sweeping powers to an appointed agent (also named John Smith in this case) to act on behalf of the principal (John Smith). The document explains that these powers are detailed in California Probate Code Sections 4400-4465 and notes that additional specific powers can be added through the Special Instructions section. It's important to note that this Power of Attorney does not authorize anyone to make medical and other healthcare decisions for John Smith.\n\nThe document also states that if John Smith wishes to revoke this power of attorney, he can do so. If there are any questions about these powers, competent legal advice should be sought.",
+      "timestamp": "2026-06-08T13:55:06.269976",
+      "metadata": {
+        "latency_ms": 7256.5621999965515,
+        "grounded": true,
+        "sources": [
+          {
+            "source": "Power of Attorney.pdf",
+            "page": 1
+          },
+          {
+            "source": "Power of Attorney.pdf",
+            "page": 3
+          },
+          {
+            "source": "Power of Attorney.pdf",
+            "page": 4
+          },
+          {
+            "source": "Power of Attorney.pdf",
+            "page": 6
+          },
+          {
+            "source": "Power of Attorney.pdf",
+            "page": 7
+          },
+          {
+            "source": "Power of Attorney.pdf",
+            "page": 2
+          },
+          {
+            "source": "Power of Attorney.pdf",
+            "page": 5
+          }
+        ],
+        "source_count": 7
+      }
+    }
+  ]
+}

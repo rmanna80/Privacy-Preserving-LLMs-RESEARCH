@@ -17,6 +17,9 @@ from typing import Optional, Any
 from sqlmodel import select
 from sqlalchemy import or_
 
+import hashlib
+from pathlib import Path
+
 from db.database import get_session
 from db.models import (
     User,
@@ -994,3 +997,313 @@ def detach_document_from_task(task_id: int, document_id: int) -> bool:
         s.delete(link)
         return True
  
+
+
+
+DOCUMENT_CATEGORIES = [
+    "investments",
+    "estate_planning",
+    "tax_planning",
+    "insurance_planning",
+    "business_planning",
+]
+ 
+CATEGORY_LABELS = {
+    "investments":        "Investments",
+    "estate_planning":    "Estate Planning",
+    "tax_planning":       "Tax Planning",
+    "insurance_planning": "Insurance Planning",
+    "business_planning":  "Business Planning",
+}
+ 
+# Common doc_types per category — drives the UI dropdown filtering.
+# Not enforced in the DB; advisors can pick "other" for anything weird.
+DOC_TYPES_BY_CATEGORY = {
+    "investments": [
+        ("brokerage_statement",   "Brokerage Statement"),
+        ("financial_statement",   "Financial Statement"),
+        ("account_opening",       "Account Opening Doc"),
+        ("other",                 "Other"),
+    ],
+    "estate_planning": [
+        ("will",                  "Will"),
+        ("trust_agreement",       "Trust Agreement"),
+        ("trust_amendment",       "Trust Amendment"),
+        ("power_of_attorney",     "Power of Attorney"),
+        ("healthcare_directive",  "Healthcare Directive"),
+        ("beneficiary_designation","Beneficiary Designation"),
+        ("other",                 "Other"),
+    ],
+    "tax_planning": [
+        ("tax_return_1040",       "Personal Tax Return (1040)"),
+        ("tax_return_1041",       "Trust Tax Return (1041)"),
+        ("k1",                    "K-1 Schedule"),
+        ("gift_tax_return",       "Gift Tax Return (709)"),
+        ("estate_tax_return",     "Estate Tax Return (706)"),
+        ("other",                 "Other"),
+    ],
+    "insurance_planning": [
+        ("insurance_policy",      "Insurance Policy"),
+        ("insurance_summary",     "Policy Summary"),
+        ("other",                 "Other"),
+    ],
+    "business_planning": [
+        ("operating_agreement",   "Operating Agreement"),
+        ("bylaws",                "Bylaws"),
+        ("shareholder_agreement", "Shareholder Agreement"),
+        ("buy_sell_agreement",    "Buy-Sell Agreement"),
+        ("other",                 "Other"),
+    ],
+}
+ 
+ 
+# ════════════════════════════════════════════════════════════════════
+# Helpers
+# ════════════════════════════════════════════════════════════════════
+ 
+def compute_file_hash(file_bytes: bytes) -> str:
+    """Return sha256 hex digest of the file contents. Used for dedup."""
+    return hashlib.sha256(file_bytes).hexdigest()
+ 
+ 
+def category_label(category: Optional[str]) -> str:
+    """User-friendly label for a category key."""
+    if category is None:
+        return "Uncategorized"
+    return CATEGORY_LABELS.get(category, category.replace("_", " ").title())
+ 
+ 
+# ════════════════════════════════════════════════════════════════════
+# Create
+# ════════════════════════════════════════════════════════════════════
+ 
+def find_document_by_hash(family_id: int, file_hash: str):
+    """Return the existing Document for this family with that hash, or None.
+ 
+    Used for dedup: before creating a new row, check if this exact file
+    is already in this family's library.
+    """
+    from db.models import Document
+    with get_session() as s:
+        stmt = select(Document).where(
+            (Document.family_id == family_id) & (Document.file_hash == file_hash)
+        )
+        return s.exec(stmt).first()
+ 
+ 
+def create_document(
+    family_id: int,
+    file_path: str,
+    file_hash: str,
+    original_filename: str,
+    category: str,
+    doc_type: str,
+    uploaded_by_user_id: int,
+    *,
+    person_id: Optional[int] = None,
+    entity_id: Optional[int] = None,
+    file_size_bytes: Optional[int] = None,
+    mime_type: Optional[str] = None,
+    doc_year: Optional[int] = None,
+    doc_date: Optional[date] = None,
+    notes: Optional[str] = None,
+):
+    """Create a Document row.
+ 
+    The file should already be saved to disk at file_path before this is
+    called. Hash should already be computed. Dedup check should be done
+    by the caller (use find_document_by_hash first).
+ 
+    Raises ValueError if category isn't in DOCUMENT_CATEGORIES.
+    """
+    from db.models import Document
+ 
+    if category not in DOCUMENT_CATEGORIES:
+        raise ValueError(
+            f"Unknown category '{category}'. Must be one of: {DOCUMENT_CATEGORIES}"
+        )
+ 
+    with get_session() as s:
+        doc = Document(
+            family_id=family_id,
+            person_id=person_id,
+            entity_id=entity_id,
+            file_path=file_path,
+            file_hash=file_hash,
+            original_filename=original_filename,
+            file_size_bytes=file_size_bytes,
+            mime_type=mime_type,
+            doc_type=doc_type,
+            doc_year=doc_year,
+            doc_date=doc_date,
+            notes=notes,
+            category=category,
+            indexed_in_vectorstore=False,
+            extraction_status="pending",
+            uploaded_by_user_id=uploaded_by_user_id,
+        )
+        s.add(doc)
+        s.flush()
+        s.refresh(doc)
+        return doc
+ 
+ 
+# ════════════════════════════════════════════════════════════════════
+# Read
+# ════════════════════════════════════════════════════════════════════
+ 
+def get_document(document_id: int):
+    from db.models import Document
+    with get_session() as s:
+        return s.get(Document, document_id)
+ 
+ 
+def list_documents_for_family(
+    family_id: int,
+    *,
+    category: Optional[str] = None,
+    include_archived: bool = False,
+) -> list:
+    """List documents for a family, optionally filtered by category.
+ 
+    Currently 'archived' is a soft-state we don't yet enforce — we treat
+    extraction_status='archived' as archived. Reserved for sub-phase 4b
+    when we add the archive workflow proper.
+    """
+    from db.models import Document
+    with get_session() as s:
+        stmt = select(Document).where(Document.family_id == family_id)
+        if category is not None:
+            stmt = stmt.where(Document.category == category)
+        if not include_archived:
+            stmt = stmt.where(Document.extraction_status != "archived")
+        stmt = stmt.order_by(Document.uploaded_at.desc())
+        return list(s.exec(stmt).all())
+ 
+ 
+def list_documents_for_person(person_id: int) -> list:
+    from db.models import Document
+    with get_session() as s:
+        stmt = (
+            select(Document)
+            .where(Document.person_id == person_id)
+            .where(Document.extraction_status != "archived")
+            .order_by(Document.uploaded_at.desc())
+        )
+        return list(s.exec(stmt).all())
+ 
+ 
+def list_documents_for_entity(entity_id: int) -> list:
+    from db.models import Document
+    with get_session() as s:
+        stmt = (
+            select(Document)
+            .where(Document.entity_id == entity_id)
+            .where(Document.extraction_status != "archived")
+            .order_by(Document.uploaded_at.desc())
+        )
+        return list(s.exec(stmt).all())
+ 
+ 
+def list_documents_by_category(family_id: int) -> dict[str, list]:
+    """Convenience: return {category_key: [docs]} for a family.
+ 
+    Includes empty categories so the UI can show all 5 sections even
+    when some are empty.
+    """
+    all_docs = list_documents_for_family(family_id)
+    grouped: dict[str, list] = {cat: [] for cat in DOCUMENT_CATEGORIES}
+    grouped["uncategorized"] = []
+    for doc in all_docs:
+        bucket = doc.category if doc.category in grouped else "uncategorized"
+        grouped[bucket].append(doc)
+    return grouped
+ 
+ 
+# ════════════════════════════════════════════════════════════════════
+# Update / Archive
+# ════════════════════════════════════════════════════════════════════
+ 
+def update_document_metadata(
+    document_id: int,
+    *,
+    category: Optional[str] = None,
+    doc_type: Optional[str] = None,
+    doc_year: Any = _UNCHANGED,
+    doc_date: Any = _UNCHANGED,
+    person_id: Any = _UNCHANGED,
+    entity_id: Any = _UNCHANGED,
+    notes: Any = _UNCHANGED,
+):
+    """Update a document's metadata (not the file itself).
+ 
+    Returns the updated Document, or None if not found.
+    """
+    from db.models import Document
+ 
+    if category is not None and category not in DOCUMENT_CATEGORIES:
+        raise ValueError(f"Unknown category '{category}'.")
+ 
+    with get_session() as s:
+        d = s.get(Document, document_id)
+        if d is None:
+            return None
+        if category is not None:
+            d.category = category
+        if doc_type is not None:
+            d.doc_type = doc_type
+        if doc_year is not _UNCHANGED:
+            d.doc_year = doc_year
+        if doc_date is not _UNCHANGED:
+            d.doc_date = doc_date
+        if person_id is not _UNCHANGED:
+            d.person_id = person_id
+        if entity_id is not _UNCHANGED:
+            d.entity_id = entity_id
+        if notes is not _UNCHANGED:
+            d.notes = notes
+        s.add(d)
+        s.flush()
+        s.refresh(d)
+        return d
+ 
+ 
+def archive_document(document_id: int) -> bool:
+    """Soft-delete a document by setting its extraction_status to archived.
+ 
+    The file on disk is NOT removed — that's a deliberate choice. Archived
+    documents stay on disk and in the DB so an advisor can recover them
+    later. A separate hard_delete_document is provided for the rare case
+    we really want them gone.
+    """
+    from db.models import Document
+    with get_session() as s:
+        d = s.get(Document, document_id)
+        if d is None:
+            return False
+        d.extraction_status = "archived"
+        s.add(d)
+        s.flush()
+        return True
+ 
+ 
+def hard_delete_document(document_id: int, *, delete_file: bool = False) -> bool:
+    """Permanently delete a document row. Optionally delete the file on disk.
+ 
+    Use sparingly. Archive is almost always what you want.
+    """
+    from db.models import Document
+    with get_session() as s:
+        d = s.get(Document, document_id)
+        if d is None:
+            return False
+        file_path = d.file_path
+        s.delete(d)
+        s.flush()
+ 
+    if delete_file and file_path:
+        try:
+            Path(file_path).unlink(missing_ok=True)
+        except Exception:
+            pass  # File-system issues shouldn't crash the DB op
+    return True
