@@ -4,12 +4,12 @@ A local, privacy-first AI system for analyzing sensitive financial documents usi
 
 ## Features
 
-- 🔒 **100% Local Processing** - No data leaves your machine
-- 📄 **Multi-Document RAG** - Semantic search across tax returns, insurance policies, etc.
-- 🛡️ **Privacy Controls** - Three-tier disclosure system (OPEN/AUTHORIZED/REDACTED)
-- 🔍 **PII Extraction** - Intelligent SSN and sensitive data extraction
-- 📊 **Audit Logging** - Complete query/response tracking
-- 🧪 **Evaluation Framework** - Accuracy testing and performance benchmarking
+- **100% Local Processing** - No data leaves your machine
+- **Multi-Document RAG** - Semantic search across tax returns, insurance policies, etc.
+- **Privacy Controls** - Three-tier disclosure system (OPEN/AUTHORIZED/REDACTED)
+- **PII Extraction** - Intelligent SSN and sensitive data extraction
+- **Audit Logging** - Complete query/response tracking
+- **Evaluation Framework** - Accuracy testing and performance benchmarking
 
 ## Installation
 ```bash
