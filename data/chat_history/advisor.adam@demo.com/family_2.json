@@ -1,47 +1,47 @@
 {
   "chat_id": "family_2",
-  "timestamp": "2026-06-08T13:55:06.270491",
+  "timestamp": "2026-06-10T17:16:13.015718",
   "messages": [
     {
       "role": "user",
-      "content": "what is the Power of Attorney?",
-      "timestamp": "2026-06-08T13:54:59.011751"
+      "content": "What documents do you have for me?",
+      "timestamp": "2026-06-10T17:16:12.234265"
     },
     {
       "role": "assistant",
-      "content": "The Power of Attorney document you provided is a Uniform Statutory Form Power of Attorney for John Smith, dated July 02, 2020. This form grants broad and sweeping powers to an appointed agent (also named John Smith in this case) to act on behalf of the principal (John Smith). The document explains that these powers are detailed in California Probate Code Sections 4400-4465 and notes that additional specific powers can be added through the Special Instructions section. It's important to note that this Power of Attorney does not authorize anyone to make medical and other healthcare decisions for John Smith.\n\nThe document also states that if John Smith wishes to revoke this power of attorney, he can do so. If there are any questions about these powers, competent legal advice should be sought.",
-      "timestamp": "2026-06-08T13:55:06.269976",
+      "content": "I have access to two documents:\n\n1. A HIPAA Authorization document dated May 08, 2019.\n2. A Power of Attorney document.\n\nThese documents contain information about authorizations for the release of medical information and designation of personal representatives, respectively.",
+      "timestamp": "2026-06-10T17:16:13.015337",
       "metadata": {
-        "latency_ms": 7256.5621999965515,
+        "latency_ms": 779.627799987793,
         "grounded": true,
         "sources": [
           {
-            "source": "Power of Attorney.pdf",
-            "page": 1
+            "source": "HIPAA Authorization.pdf",
+            "page": 0
           },
           {
-            "source": "Power of Attorney.pdf",
-            "page": 3
-          },
-          {
-            "source": "Power of Attorney.pdf",
+            "source": "HIPAA Authorization.pdf",
             "page": 4
           },
           {
             "source": "Power of Attorney.pdf",
-            "page": 6
+            "page": 0
           },
           {
-            "source": "Power of Attorney.pdf",
-            "page": 7
+            "source": "HIPAA Authorization.pdf",
+            "page": 3
           },
           {
-            "source": "Power of Attorney.pdf",
+            "source": "HIPAA Authorization.pdf",
             "page": 2
           },
           {
-            "source": "Power of Attorney.pdf",
-            "page": 5
+            "source": "HIPAA Authorization.pdf",
+            "page": 3
+          },
+          {
+            "source": "HIPAA Authorization.pdf",
+            "page": 2
           }
         ],
         "source_count": 7

@@ -1307,3 +1307,137 @@ def hard_delete_document(document_id: int, *, delete_file: bool = False) -> bool
         except Exception:
             pass  # File-system issues shouldn't crash the DB op
     return True
+
+
+
+
+
+def create_extraction(
+    document_id: int,
+    field_key: str,
+    field_value: str,
+    extraction_type: str,
+    *,
+    is_pii: bool = False,
+    page_number: Optional[int] = None,
+    text_snippet: Optional[str] = None,
+    person_id: Optional[int] = None,
+    entity_id: Optional[int] = None,
+    extracted_by: str = "manual",   # 'manual' | 'llm' | 'regex'
+    confidence: float = 1.0,
+):
+    """Create an extraction row. PII values are encrypted at rest."""
+    from db.models import Extraction
+    from db.crypto import encrypt_field
+    import base64
+ 
+    stored_value = field_value
+    if is_pii:
+        blob = encrypt_field(field_value)
+        stored_value = base64.b64encode(blob).decode() if blob else ""
+ 
+    with get_session() as s:
+        e = Extraction(
+            document_id=document_id,
+            field_key=field_key,
+            field_value=stored_value,
+            extraction_type=extraction_type,
+            is_pii=is_pii,
+            page_number=page_number,
+            text_snippet=text_snippet,
+            person_id=person_id,
+            entity_id=entity_id,
+            extracted_by=extracted_by,
+            confidence=confidence,
+        )
+        s.add(e)
+        s.flush()
+        s.refresh(e)
+        return e
+ 
+ 
+def extraction_plain_value(extraction) -> str:
+    """Return the human-readable value, decrypting if PII."""
+    if not extraction.is_pii:
+        return extraction.field_value
+    from db.crypto import decrypt_field
+    import base64
+    try:
+        blob = base64.b64decode(extraction.field_value)
+        return decrypt_field(blob) or "(decryption failed)"
+    except Exception:
+        return "(decryption failed)"
+ 
+ 
+def list_extractions_for_document(document_id: int) -> list:
+    from db.models import Extraction
+    with get_session() as s:
+        stmt = (
+            select(Extraction)
+            .where(Extraction.document_id == document_id)
+            .order_by(Extraction.field_key)
+        )
+        return list(s.exec(stmt).all())
+ 
+ 
+def list_verified_extractions_for_family(family_id: int) -> list:
+    """All VERIFIED extractions across a family's documents — the feed
+    for downstream pages (Family Tree overlay, Reports, Copilot)."""
+    from db.models import Extraction, Document
+    with get_session() as s:
+        doc_ids = [
+            d.id for d in s.exec(
+                select(Document).where(Document.family_id == family_id)
+            ).all()
+        ]
+        if not doc_ids:
+            return []
+        stmt = (
+            select(Extraction)
+            .where(Extraction.document_id.in_(doc_ids))
+            .where(Extraction.verified_at.is_not(None))
+            .order_by(Extraction.document_id, Extraction.field_key)
+        )
+        return list(s.exec(stmt).all())
+ 
+ 
+def verify_extraction(
+    extraction_id: int,
+    verified_by_user_id: int,
+    *,
+    corrected_value: Optional[str] = None,
+):
+    """Mark an extraction verified, optionally correcting the value first."""
+    from db.models import Extraction
+    from db.crypto import encrypt_field
+    import base64
+ 
+    with get_session() as s:
+        e = s.get(Extraction, extraction_id)
+        if e is None:
+            return None
+        if corrected_value is not None:
+            if e.is_pii:
+                blob = encrypt_field(corrected_value)
+                e.field_value = base64.b64encode(blob).decode() if blob else ""
+            else:
+                e.field_value = corrected_value
+            e.extracted_by = "manual"   # human-corrected
+            e.confidence = 1.0
+        e.verified_by_user_id = verified_by_user_id
+        e.verified_at = datetime.utcnow()
+        s.add(e)
+        s.flush()
+        s.refresh(e)
+        return e
+ 
+ 
+def reject_extraction(extraction_id: int) -> bool:
+    """Delete an extraction (the advisor said the AI got it wrong)."""
+    from db.models import Extraction
+    with get_session() as s:
+        e = s.get(Extraction, extraction_id)
+        if e is None:
+            return False
+        s.delete(e)
+        return True

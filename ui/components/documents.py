@@ -129,7 +129,13 @@ def render_documents_page(family_id: int, user) -> None:
             else:
                 for d in docs:
                     _render_doc_row_detailed(d, family_id)
-
+    
+    # ── Extraction panel (opens when an Extractions button is clicked) ──
+    extraction_doc_id = st.session_state.get("extraction_doc_id")
+    if extraction_doc_id is not None:
+        st.markdown("---")
+        from ui.components.extractions import render_extraction_panel
+        render_extraction_panel(extraction_doc_id, user)
 
 # ─────────────────────────────────────────────────────────────────────
 # Upload form
@@ -314,16 +320,34 @@ def _process_upload(
     )
 
     # Trigger reindex so the chat immediately picks up this new doc
+    # with st.spinner("Indexing for AI chat…"):
+    #     try:
+    #         from ai_core.family_qa import reindex_family
+    #         reindex_family(family_id, verbose=False)
+    #         # Invalidate the cached QA system so chat reloads with the new index
+    #         if st.session_state.get("qa_owner") == f"family::{family_id}":
+    #             st.session_state.qa_system = None
+    #             st.session_state.qa_owner = None
+    #         st.caption(
+    #             f"🤖 Indexed for AI — ask Angel about this document in Chat History."
+    #         )
+    #     except Exception as e:
+    #         st.warning(
+    #             f"Document saved, but AI indexing failed: {e}. "
+    #             f"Chat may not see this document until reindex succeeds."
+    #         )
+
     with st.spinner("Indexing for AI chat…"):
         try:
+            # Release the cached QA system FIRST — it holds open Chroma
+            # file handles, and Windows blocks deleting locked files.
+            st.session_state.qa_system = None
+            st.session_state.qa_owner = None
+
             from ai_core.family_qa import reindex_family
             reindex_family(family_id, verbose=False)
-            # Invalidate the cached QA system so chat reloads with the new index
-            if st.session_state.get("qa_owner") == f"family::{family_id}":
-                st.session_state.qa_system = None
-                st.session_state.qa_owner = None
             st.caption(
-                f"🤖 Indexed for AI — ask Angel about this document in Chat History."
+                "🤖 Indexed for AI — ask Angel about this document in Chat History."
             )
         except Exception as e:
             st.warning(
@@ -383,6 +407,9 @@ def _render_doc_row_detailed(doc, family_id: int) -> None:
         with c3:
             indexed_emoji = "✅" if doc.indexed_in_vectorstore else "⏳"
             st.caption(f"Indexed: {indexed_emoji}")
+            if st.button("✨ Extractions", key=f"extract_doc_{doc.id}", use_container_width=True):
+                st.session_state.extraction_doc_id = doc.id
+                st.rerun()
             if st.button("Archive", key=f"archive_doc_{doc.id}", use_container_width=True):
                 archive_document(doc.id)
                 st.rerun()

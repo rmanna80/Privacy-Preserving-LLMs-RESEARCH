@@ -42,6 +42,18 @@ def family_vectorstore_dir(family_id: int) -> Path:
     p.mkdir(parents=True, exist_ok=True)
     return p
 
+def _release_chroma_handles() -> None:
+    """Best-effort release of chromadb's cached clients so Windows will
+    allow deleting a collection directory. Chroma caches client systems
+    per path; without clearing, rmtree hits locked .bin files."""
+    import gc
+    try:
+        from chromadb.api.client import SharedSystemClient
+        SharedSystemClient.clear_system_cache()
+    except Exception:
+        pass
+    gc.collect()
+
 
 class FamilyQASystem(FinancialQASystem):
     """A FinancialQASystem that indexes a specific family's documents.
@@ -180,11 +192,14 @@ class FamilyQASystem(FinancialQASystem):
             self.raw_docs, self.chunk_size, self.chunk_overlap
         )
 
+        if force_rebuild:
+            _release_chroma_handles()
+
         self.vector_store = build_or_load_vectorstore(
             chunks=self.chunks,
             persist_dir=self.db_dir,
             embeddings=self.embeddings,
-            force_rebuild=True,
+            force_rebuild=force_rebuild,
         )
         self.retriever = self.vector_store.as_retriever(
             search_kwargs={"k": self.DEFAULT_RETRIEVAL_K}
