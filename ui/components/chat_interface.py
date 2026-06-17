@@ -86,11 +86,13 @@ def _handle_message(prompt: str, user, qa_system):
                     latency_ms = 0
                     trace = {}
                 else:
+                    _user = st.session_state.get("user")
+                    _is_advisor = bool(_user and _user.is_advisor())
                     answer = qa_system.ask(
                         question=prompt,
                         chat_history=history_for_llm,
                         disclosure_mode=st.session_state.disclosure_mode,
-                        authorized=True,   # user is authenticated
+                        authorized=_is_advisor,   # advisors can see full SSN: clients masked 
                         include_sources=False,  # we show sources in expander separately
                     )
                     latency_ms = (time.perf_counter() - t0) * 1000.0

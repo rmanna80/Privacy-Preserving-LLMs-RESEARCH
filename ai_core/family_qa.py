@@ -227,6 +227,130 @@ class FamilyQASystem(FinancialQASystem):
                 f"{len(self.raw_docs)} pages, {len(self.chunks)} chunks"
             )
 
+    def ask(self, question, chat_history=None, disclosure_mode=None,
+            authorized=False, **kwargs):
+        # SSN questions: deterministic, family-aware, never through the LLM
+        from ai_core.sensitive_extractors import looks_like_ssn_question
+        if looks_like_ssn_question(question):
+            from ai_core.ssn_resolver import resolve_ssn_question
+            # Advisor sessions run authorized=True; clients authorized=False.
+            return resolve_ssn_question(
+                question,
+                family_id=self.family_id,
+                chunks=self.chunks or [],
+                authorized=bool(authorized),
+            )
+
+        if self._is_document_list_question(question):
+            catalog = self._build_document_catalog()
+            if catalog:
+                return catalog
+
+        if self._is_describe_all_question(question):
+            return self._describe_each_document()
+
+        return super().ask(
+            question,
+            chat_history=chat_history,
+            disclosure_mode=disclosure_mode,
+            authorized=authorized,
+            **kwargs,
+        )
+
+    @staticmethod
+    def _is_document_list_question(question: str) -> bool:
+        q = question.lower()
+        # Phrases that signal "list my documents" rather than "answer from them"
+        triggers = [
+            "what documents",
+            "which documents",
+            "what files",
+            "list documents",
+            "list my documents",
+            "what do you have for me",
+            "what documents do you have",
+            "show me my documents",
+            "what paperwork",
+            "what records do you have",
+        ]
+        return any(t in q for t in triggers)
+
+    def _build_document_catalog(self) -> str:
+        """Build a human-readable list of this family's documents straight
+        from the DB — authoritative, unlike RAG retrieval."""
+        from db.repositories import list_documents_for_family, category_label
+
+        docs = list_documents_for_family(self.family_id)
+        if not docs:
+            return "I don't have any documents on file for this family yet."
+
+        # Group by category for a clean answer
+        by_cat: dict[str, list] = {}
+        for d in docs:
+            label = category_label(d.category)
+            by_cat.setdefault(label, []).append(d)
+
+        lines = [f"I have {len(docs)} document(s) on file:\n"]
+        for cat in sorted(by_cat.keys()):
+            lines.append(f"**{cat}**")
+            for d in by_cat[cat]:
+                bits = [d.original_filename]
+                if d.doc_year:
+                    bits.append(f"({d.doc_year})")
+                doc_type_label = d.doc_type.replace("_", " ").title()
+                lines.append(f"- {' '.join(bits)} — {doc_type_label}")
+            lines.append("")  # blank line between categories
+
+        return "\n".join(lines).strip()
+    
+    @staticmethod
+    def _is_describe_all_question(question: str) -> bool:
+        q = question.lower()
+        describe_words = ["tell me about", "describe", "summarize", "overview",
+                          "what is in", "what's in", "explain"]
+        all_words = ["each document", "all documents", "every document",
+                     "each doc", "all my documents", "all of my documents",
+                     "each of my documents", "the documents"]
+        return any(d in q for d in describe_words) and any(a in q for a in all_words)
+
+    def _describe_each_document(self) -> str:
+        """Summarize each document individually from its own chunks.
+        Avoids RAG's coverage problem on 'tell me about everything'."""
+        from db.repositories import list_documents_for_family
+
+        docs = list_documents_for_family(self.family_id)
+        if not docs:
+            return "I don't have any documents on file for this family yet."
+
+        sections = []
+        for d in docs:
+            # Gather this document's chunks from the in-memory index
+            doc_chunks = [
+                c for c in self.chunks
+                if c.metadata.get("document_id") == d.id
+            ]
+            if not doc_chunks:
+                sections.append(f"**{d.original_filename}** — (no readable text extracted)")
+                continue
+
+            # Cap the context so the prompt stays manageable
+            context = "\n\n".join(c.page_content for c in doc_chunks[:6])
+            prompt = (
+                f"Summarize the following document in 2-3 sentences. "
+                f"Be specific about what it is and its key facts. "
+                f"Document name: {d.original_filename}\n\n"
+                f"Content:\n{context[:4000]}\n\nSummary:"
+            )
+            try:
+                resp = self.llm.invoke(prompt)
+                summary = resp.content if hasattr(resp, "content") else str(resp)
+            except Exception as e:
+                summary = f"(could not summarize: {e})"
+
+            sections.append(f"**{d.original_filename}**\n{summary.strip()}")
+
+        return "\n\n".join(sections)
+
 def reindex_family(family_id: int, verbose: bool = False) -> FamilyQASystem:
     """Convenience function called by the upload UI after a successful upload.
 

@@ -89,6 +89,14 @@ def render_extraction_panel(document_id: int, user) -> None:
         st.markdown("**Verified**")
         for e in verified:
             _render_verified_row(e, doc)
+         # Offer promotion to structured family data (Model B)
+        st.markdown("")
+        if st.button("🔗 Promote verified facts to Family Data →",
+                     key=f"open_promo_{doc.id}", type="primary"):
+            st.session_state.promotion_doc_id = doc.id
+            st.session_state.extraction_doc_id = None
+            st.rerun()
+
 
     if not extractions:
         st.info(

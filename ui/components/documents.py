@@ -136,6 +136,12 @@ def render_documents_page(family_id: int, user) -> None:
         st.markdown("---")
         from ui.components.extractions import render_extraction_panel
         render_extraction_panel(extraction_doc_id, user)
+    # ── Promotion panel (opens when a Promote button is clicked) ──
+    promotion_doc_id = st.session_state.get("promotion_doc_id")
+    if promotion_doc_id is not None:
+        st.markdown("---")
+        from ui.components.promotion_panel import render_promotion_panel
+        render_promotion_panel(promotion_doc_id, user)
 
 # ─────────────────────────────────────────────────────────────────────
 # Upload form
@@ -346,6 +352,9 @@ def _process_upload(
 
             from ai_core.family_qa import reindex_family
             reindex_family(family_id, verbose=False)
+            # Invalidate the cached QA system so chat reloads with the new index
+            versions = st.session_state.setdefault("family_index_versions", {})
+            versions[family_id] = versions.get(family_id, 0) + 1
             st.caption(
                 "🤖 Indexed for AI — ask Angel about this document in Chat History."
             )

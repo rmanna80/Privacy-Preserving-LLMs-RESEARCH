@@ -12,7 +12,8 @@
 from langchain_ollama import ChatOllama
 
 
-def build_ollama_llm(model: str = "qwen2.5:7b", temperature: float = 0.0):  # Changed model and temp
+def build_ollama_llm(model: str = "llama3.2:3b", temperature: float = 0.0):  # Changed model and temp 
+                                # chainging the model (qwen2.5:7b)
     """
     Build Ollama LLM for financial document Q&A
     

@@ -58,9 +58,21 @@ def get_or_build_qa(
     # ─── Family-scoped path (new in 4c) ───────────────────────────────
     if family_id is not None:
         owner_key = f"family::{family_id}"
+
+        # Per-family index version — bumped on each upload/reindex. If the
+        # cached system was built against an older version, rebuild it.
+        versions = st.session_state.get("family_index_version", {})
+        current_version = versions.get(family_id, 0)
+
         current_owner = st.session_state.get("qa_owner")
         current_system = st.session_state.get("qa_system")
-        if current_system is not None and current_owner == owner_key:
+        cached_version = st.session_state.get("qa_owner_version")
+
+        if (
+            current_system is not None
+            and current_owner == owner_key
+            and cached_version == current_version
+        ):
             return current_system
 
         with st.spinner("Loading family AI index…"):
@@ -69,6 +81,7 @@ def get_or_build_qa(
             system.index_documents(force_rebuild=False)
             st.session_state.qa_system = system
             st.session_state.qa_owner = owner_key
+            st.session_state.qa_owner_version = current_version
             return system
 
     # ─── Legacy per-client path ───────────────────────────────────────

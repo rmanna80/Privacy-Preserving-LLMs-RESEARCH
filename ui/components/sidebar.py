@@ -3,7 +3,22 @@ import streamlit as st
 from datetime import datetime
 from pathlib import Path
 import json
+import re as _re
 
+_SSN_RE = _re.compile(r"\b\d{3}[- ]?\d{2}[- ]?\d{4}\b")
+
+def _scrub_pii_for_storage(messages):
+    """Return a copy of the messages with SSNs redacted, so PII never
+    lands in the plaintext chat-history file. The on-screen display is
+    unaffected — this only touches what we persist to disk."""
+    scrubbed = []
+    for m in messages:
+        m2 = dict(m)
+        content = m2.get("content", "")
+        if isinstance(content, str):
+            m2["content"] = _SSN_RE.sub("[SSN redacted in log]", content)
+        scrubbed.append(m2)
+    return scrubbed
 
 def save_chat_history(user, chat_id, messages):
     """Save chat history to file"""
@@ -13,7 +28,7 @@ def save_chat_history(user, chat_id, messages):
     history_file.write_text(json.dumps({
         "chat_id": chat_id,
         "timestamp": datetime.now().isoformat(),
-        "messages": messages
+        "messages": _scrub_pii_for_storage(messages)
     }, indent=2))
 
 

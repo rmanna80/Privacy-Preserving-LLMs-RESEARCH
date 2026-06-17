@@ -1,0 +1,38 @@
+{
+  "chat_id": "family_3",
+  "timestamp": "2026-06-16T23:37:24.902267",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What documents do you have for me?",
+      "timestamp": "2026-06-16T23:37:14.169097"
+    },
+    {
+      "role": "assistant",
+      "content": "I have 1 document(s) on file:\n\n**Estate Planning**\n- 2024_John_and_Sally_Smith (1).pdf (2026) \u2014 Will",
+      "timestamp": "2026-06-16T23:37:14.171239",
+      "metadata": {
+        "latency_ms": 0.709200045093894,
+        "grounded": false,
+        "sources": [],
+        "source_count": 0
+      }
+    },
+    {
+      "role": "user",
+      "content": "what is Sally Smith's ssn?",
+      "timestamp": "2026-06-16T23:37:24.899577"
+    },
+    {
+      "role": "assistant",
+      "content": "Sally's SSN ends in **\u2022\u2022\u2022-\u2022\u2022-2222**. Full SSN access for clients is configured per-person by your advisor.",
+      "timestamp": "2026-06-16T23:37:24.902011",
+      "metadata": {
+        "latency_ms": 0.772500061430037,
+        "grounded": false,
+        "sources": [],
+        "source_count": 0
+      }
+    }
+  ]
+}

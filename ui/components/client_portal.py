@@ -203,30 +203,51 @@ def _render_chat_bar(user) -> None:
 # ─────────────────────────────────────────────────────────────────────
 
 def _resolve_client_family(user) -> int | None:
-    """Find which family a client user belongs to.
+    """Find which family a client belongs to.
 
-    Today: stub. A client's link to a family will be wired in Phase 1
-    when we extend the schema with Person ↔ User association.
-
-    For now we pick the first family the system can find, which lets
-    clients at least see the portal shell with real data. Once Phase 1
-    lands, replace this with a proper join.
+    Interim resolution (until the full User<->Person identity link in the
+    next phase):
+      1. If a Person in any family has an email matching this user's
+         login email, use that Person's family.
+      2. Else, if the auth system maps this client to an advisor, use the
+         most recently created family owned by that advisor.
+      3. Else fall back to None (shows the 'no family' message).
     """
-    # If session already has it from auth or a prior interaction
     if st.session_state.get("client_family_id"):
         return st.session_state.client_family_id
 
-    # Stub: ask the DB for ANY family the system knows about, just so the
-    # demo portal has data. Replace with real client→family lookup later.
     from db.database import get_session
-    from db.models import Family
+    from db.models import Family, Person, User as DBUser
     from sqlmodel import select
 
+    login_email = (getattr(user, "username", "") or "").lower()
+
     with get_session() as s:
-        first = s.exec(select(Family)).first()
-        if first is not None:
-            st.session_state.client_family_id = first.id
-            return first.id
+        # 1) Match a Person by email
+        if login_email:
+            person = s.exec(
+                select(Person).where(Person.email == login_email)
+            ).first()
+            if person is not None:
+                st.session_state.client_family_id = person.family_id
+                return person.family_id
+
+        # 2) Match by advisor ownership — most recent family this client's
+        #    advisor owns. Requires the client's advisor to be resolvable.
+        #    We match the DB user by email, then find families they can access.
+        db_user = s.exec(
+            select(DBUser).where(DBUser.email == login_email)
+        ).first()
+        if db_user is not None:
+            fam = s.exec(
+                select(Family)
+                .where(Family.advisor_user_id == db_user.id)
+                .order_by(Family.created_at.desc())
+            ).first()
+            if fam is not None:
+                st.session_state.client_family_id = fam.id
+                return fam.id
+
     return None
 
 
