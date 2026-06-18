@@ -42,7 +42,7 @@ CLIENT_NAV = [
     ("Org Ownership", "🏢"),
     ("Advisory Team", "🤝"),
     ("Documents", "📁"),
-    ("Chat History", "💬"),
+    ("Angel", "💬"),
 ]
 
 
@@ -71,61 +71,23 @@ def render_client_portal(user) -> None:
     st.markdown(f"# {family.name}")
 
     if selected == "Tasks":
-        _coming_soon(
-            "Tasks",
-            "Tasks your advisory team has assigned to you and your family.",
-            [
-                "See every task assigned to you by your advisors",
-                "Add comments, upload requested documents",
-                "Mark tasks complete and track progress",
-                "Get reminders for upcoming due dates",
-            ],
-        )
+        from ui.components.client_views import render_client_tasks
+        render_client_tasks(user, family_id)
     elif selected == "Key People & Orgs":
         _render_key_people_readonly(family_id)
     elif selected == "Family Tree":
-        _coming_soon(
-            "Family Tree",
-            "Visual map of your family across generations.",
-            [
-                "See your family tree as an editorial visualization",
-                "Click any person to see their key details",
-                "Print or export for family records",
-            ],
-        )
+        from ui.components.family_tree import render_family_tree
+        render_family_tree(family_id)
     elif selected == "Org Ownership":
-        _coming_soon(
-            "Organizational Ownership",
-            "How your family's entities are owned and connected.",
-            [
-                "Flow chart of ownership across trusts, LLCs, and other entities",
-                "See who benefits from what",
-                "Understand the structure your advisors have built",
-            ],
-        )
+        from ui.components.org_ownership import render_org_ownership
+        render_org_ownership(family_id)
     elif selected == "Advisory Team":
-        _coming_soon(
-            "Advisory Team",
-            "The professionals helping your family.",
-            [
-                "See your full advisory team at a glance",
-                "Contact information for each advisor",
-                "Visual hub-and-spoke layout showing who's helping with what",
-            ],
-        )
+        from ui.components.client_views import render_client_advisory_team
+        render_client_advisory_team(family_id)
     elif selected == "Documents":
-        _coming_soon(
-            "Documents",
-            "Your family's documents, organized.",
-            [
-                "Browse documents by category (Investments, Estate, Tax, "
-                "Insurance, Business)",
-                "Upload new documents your advisor has requested",
-                "Search across all your documents",
-                "Chat with Angel AI about any of them",
-            ],
-        )
-    elif selected == "Chat History":
+        from ui.components.client_views import render_client_documents
+        render_client_documents(family_id)
+    elif selected == "Angel":
         _render_client_chat(user, family_id)
 
 

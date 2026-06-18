@@ -349,7 +349,7 @@ def render_brand_header() -> None:
     from pathlib import Path
     import base64
  
-    logo_path = Path("static/angel_logo.png")
+    logo_path = Path("")
     if logo_path.exists():
         try:
             encoded = base64.b64encode(logo_path.read_bytes()).decode()

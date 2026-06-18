@@ -1,140 +1,37 @@
 {
   "chat_id": "family_2",
-  "timestamp": "2026-06-16T23:22:23.336602",
+  "timestamp": "2026-06-17T12:58:11.598206",
   "messages": [
     {
       "role": "user",
       "content": "What documents do you have for me?",
-      "timestamp": "2026-06-16T23:21:46.761127"
+      "timestamp": "2026-06-17T12:57:53.498374"
     },
     {
       "role": "assistant",
       "content": "I have 4 document(s) on file:\n\n**Estate Planning**\n- Power of Attorney.pdf (2026) \u2014 Will\n\n**Investments**\n- AIUL Sample Contract.pdf (2002) \u2014 Brokerage Statement\n- HIPAA Authorization.pdf (2026) \u2014 Brokerage Statement\n\n**Tax Planning**\n- 2024_John_and_Sally_Smith.pdf (2026) \u2014 Tax Return 1040",
-      "timestamp": "2026-06-16T23:21:46.763342",
+      "timestamp": "2026-06-17T12:57:53.500627",
       "metadata": {
-        "latency_ms": 0.6577000021934509,
-        "grounded": true,
-        "sources": [
-          {
-            "source": "HIPAA Authorization.pdf",
-            "page": 5
-          },
-          {
-            "source": "HIPAA Authorization.pdf",
-            "page": 4
-          },
-          {
-            "source": "HIPAA Authorization.pdf",
-            "page": 5
-          },
-          {
-            "source": "HIPAA Authorization.pdf",
-            "page": 3
-          },
-          {
-            "source": "HIPAA Authorization.pdf",
-            "page": 2
-          },
-          {
-            "source": "Power of Attorney.pdf",
-            "page": 1
-          },
-          {
-            "source": "HIPAA Authorization.pdf",
-            "page": 2
-          }
-        ],
-        "source_count": 7
+        "latency_ms": 0.8161000000654894,
+        "grounded": false,
+        "sources": [],
+        "source_count": 0
       }
     },
     {
       "role": "user",
-      "content": "what is John Smith's ssn?",
-      "timestamp": "2026-06-16T23:22:01.938482"
+      "content": "can you give me ssn of the family members?",
+      "timestamp": "2026-06-17T12:58:11.514383"
     },
     {
       "role": "assistant",
-      "content": "I couldn't find anyone named What Is John Smith in this family's records.",
-      "timestamp": "2026-06-16T23:22:01.942427",
+      "content": "I couldn't find anyone named Family Members in this family's records.",
+      "timestamp": "2026-06-17T12:58:11.597804",
       "metadata": {
-        "latency_ms": 1.9651000620797276,
-        "grounded": true,
-        "sources": [
-          {
-            "source": "HIPAA Authorization.pdf",
-            "page": 5
-          },
-          {
-            "source": "HIPAA Authorization.pdf",
-            "page": 4
-          },
-          {
-            "source": "HIPAA Authorization.pdf",
-            "page": 5
-          },
-          {
-            "source": "HIPAA Authorization.pdf",
-            "page": 3
-          },
-          {
-            "source": "HIPAA Authorization.pdf",
-            "page": 2
-          },
-          {
-            "source": "Power of Attorney.pdf",
-            "page": 1
-          },
-          {
-            "source": "HIPAA Authorization.pdf",
-            "page": 2
-          }
-        ],
-        "source_count": 7
-      }
-    },
-    {
-      "role": "user",
-      "content": "List all SSNs",
-      "timestamp": "2026-06-16T23:22:23.318616"
-    },
-    {
-      "role": "assistant",
-      "content": "I have a social security number on file for:\n- Maggie\n- Bob\n- Sarah Elizabeth Reynolds-Chen\n\nWhose SSN would you like?",
-      "timestamp": "2026-06-16T23:22:23.336021",
-      "metadata": {
-        "latency_ms": 15.554499928839505,
-        "grounded": true,
-        "sources": [
-          {
-            "source": "HIPAA Authorization.pdf",
-            "page": 5
-          },
-          {
-            "source": "HIPAA Authorization.pdf",
-            "page": 4
-          },
-          {
-            "source": "HIPAA Authorization.pdf",
-            "page": 5
-          },
-          {
-            "source": "HIPAA Authorization.pdf",
-            "page": 3
-          },
-          {
-            "source": "HIPAA Authorization.pdf",
-            "page": 2
-          },
-          {
-            "source": "Power of Attorney.pdf",
-            "page": 1
-          },
-          {
-            "source": "HIPAA Authorization.pdf",
-            "page": 2
-          }
-        ],
-        "source_count": 7
+        "latency_ms": 81.8011999999726,
+        "grounded": false,
+        "sources": [],
+        "source_count": 0
       }
     }
   ]

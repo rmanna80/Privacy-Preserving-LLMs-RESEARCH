@@ -1,18 +1,18 @@
 {
   "chat_id": "family_3",
-  "timestamp": "2026-06-16T23:37:24.902267",
+  "timestamp": "2026-06-17T13:29:37.702901",
   "messages": [
     {
       "role": "user",
       "content": "What documents do you have for me?",
-      "timestamp": "2026-06-16T23:37:14.169097"
+      "timestamp": "2026-06-17T13:27:58.185869"
     },
     {
       "role": "assistant",
-      "content": "I have 1 document(s) on file:\n\n**Estate Planning**\n- 2024_John_and_Sally_Smith (1).pdf (2026) \u2014 Will",
-      "timestamp": "2026-06-16T23:37:14.171239",
+      "content": "I have 2 document(s) on file:\n\n**Estate Planning**\n- 2024_John_and_Sally_Smith (1).pdf (2026) \u2014 Will\n\n**Insurance Planning**\n- Power of Attorney.pdf (2026) \u2014 Insurance Policy",
+      "timestamp": "2026-06-17T13:27:58.188068",
       "metadata": {
-        "latency_ms": 0.709200045093894,
+        "latency_ms": 0.7061999999677937,
         "grounded": false,
         "sources": [],
         "source_count": 0
@@ -20,15 +20,47 @@
     },
     {
       "role": "user",
-      "content": "what is Sally Smith's ssn?",
-      "timestamp": "2026-06-16T23:37:24.899577"
+      "content": "what is John Smith's ssn?",
+      "timestamp": "2026-06-17T13:28:49.952065"
+    },
+    {
+      "role": "assistant",
+      "content": "John's SSN ends in **\u2022\u2022\u2022-\u2022\u2022-1111**. Full SSN access for clients is configured per-person by your advisor.",
+      "timestamp": "2026-06-17T13:28:49.954615",
+      "metadata": {
+        "latency_ms": 0.7292999998753658,
+        "grounded": false,
+        "sources": [],
+        "source_count": 0
+      }
+    },
+    {
+      "role": "user",
+      "content": "What is Sally Smith's ssn?",
+      "timestamp": "2026-06-17T13:29:20.168112"
     },
     {
       "role": "assistant",
       "content": "Sally's SSN ends in **\u2022\u2022\u2022-\u2022\u2022-2222**. Full SSN access for clients is configured per-person by your advisor.",
-      "timestamp": "2026-06-16T23:37:24.902011",
+      "timestamp": "2026-06-17T13:29:20.170316",
       "metadata": {
-        "latency_ms": 0.772500061430037,
+        "latency_ms": 0.7927999999992608,
+        "grounded": false,
+        "sources": [],
+        "source_count": 0
+      }
+    },
+    {
+      "role": "user",
+      "content": "What is Bob's ssn?",
+      "timestamp": "2026-06-17T13:29:37.699819"
+    },
+    {
+      "role": "assistant",
+      "content": "I couldn't find anyone named Bob in this family's records.",
+      "timestamp": "2026-06-17T13:29:37.702613",
+      "metadata": {
+        "latency_ms": 0.9663999999247608,
         "grounded": false,
         "sources": [],
         "source_count": 0

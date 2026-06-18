@@ -56,6 +56,7 @@ from ui.components.family_tree import render_family_tree
 from ui.components.advisory_team import render_advisory_team_page
 from ui.components.tasks import render_tasks_page, render_my_tasks_page
 from ui.components.documents import render_documents_page
+from ui.components.org_ownership import render_org_ownership
 from ui.theme import inject_theme, render_brand_header, Color
 
 
@@ -69,7 +70,7 @@ TOP_NAV = [
     ("My Tasks", "✓"),
     ("Partnership Circle", "🤝"),
     ("Reports", "📊"),
-    ("Chat History", "💬"),
+    ("Angel", "💬"),
 ]
 
 # Per-family secondary nav (visible when a family is selected)
@@ -110,7 +111,7 @@ def render_advisor_shell(user) -> None:
         _render_partnership_circle_view(user)
     elif selected_top == "Reports":
         _render_reports_view(user)
-    elif selected_top == "Chat History":
+    elif selected_top == "Angel":
         _render_chat_history_view(user)
 
 
@@ -524,18 +525,7 @@ def _render_family_tree_page(family_id: int) -> None:
 
 
 def _render_org_ownership(family_id: int) -> None:
-    _coming_soon(
-        title="Organizational Ownership",
-        description="A flow-tree view of who owns what across the family's entities.",
-        will_do=[
-            "Show ownership percentages between people and entities",
-            "Show entity-to-entity ownership (parent / subsidiary chains)",
-            "Color-code by entity type (trust, LLC, corp, foundation)",
-            "Click any entity to jump to its detail page",
-            "Export the chart as PNG for client meetings",
-        ],
-        phase="Phase 3 — Family Tree work (next visual phase)",
-    )
+    render_org_ownership(family_id)
 
 
 def _render_advisory_team(family_id: int) -> None:
