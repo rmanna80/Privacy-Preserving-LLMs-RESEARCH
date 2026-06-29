@@ -188,14 +188,6 @@ def _render_chat_bar(user) -> None:
             label_visibility="collapsed",
             key="advisor_chatbar",
         )
-    # with col_label:
-    #     st.markdown(
-    #         f"<div style='text-align:right; padding-top:8px; "
-    #         f"font-size:0.8rem; color:{Color.GOLD_500};'>"
-    #         f"✨ Angel AI"
-    #         f"</div>",
-    #         unsafe_allow_html=True,
-    #     )
     st.markdown("<div style='height:0.5rem;'></div>", unsafe_allow_html=True)
 
 
@@ -217,6 +209,7 @@ def _render_families_list(advisor_db_id: int) -> None:
     """Card grid of every family this advisor manages."""
     st.markdown("# Families")
     st.caption("Your families and their key information at a glance.")
+    st.markdown("<div style='height:0.5rem;'></div>", unsafe_allow_html=True)
 
     families = list_families_for_advisor(advisor_db_id)
 
@@ -229,7 +222,7 @@ def _render_families_list(advisor_db_id: int) -> None:
             key="family_search",
         )
     with col_new:
-        if st.button("➕ New Family", use_container_width=True):
+        if st.button("➕ New Family", use_container_width=True, type="primary"):
             st.session_state.show_new_family_form = True
 
     if st.session_state.get("show_new_family_form", False):
@@ -267,56 +260,85 @@ def _render_families_list(advisor_db_id: int) -> None:
                     st.session_state.show_new_family_form = False
                     st.rerun()
 
-    st.markdown("---")
+    # Apply search filter
+    query = (st.session_state.get("family_search") or "").strip().lower()
+    if query:
+        families = [f for f in families if query in f.name.lower()]
+
+    st.markdown(
+        "<div style='height:0.5rem; border-bottom:1px solid "
+        "rgba(201,169,97,0.12); margin-bottom:1.5rem;'></div>",
+        unsafe_allow_html=True,
+    )
 
     if not families:
         st.info(
-            "You haven't added any families yet. Click **➕ New Family** "
-            "above to start onboarding your first client."
+            "No families to show. Click **➕ New Family** above to start "
+            "onboarding your first client."
         )
         return
 
-    # Grid of family cards (2 per row, no phantom right column on odd counts)
+    # Grid of family cards (2 per row)
     for i in range(0, len(families), 2):
-        # Only create as many columns as we have cards in this row
         items_this_row = min(2, len(families) - i)
-        if items_this_row == 1:
-            # Render in left half only — keeps card the same width as the
-            # 2-up layout instead of stretching across the full page.
-            left, right = st.columns(2)
-            with left:
-                _render_family_card(families[i])
-        else:
-            cols = st.columns(2)
-            for j, col in enumerate(cols):
-                with col:
-                    _render_family_card(families[i + j])
+        cols = st.columns(2)
+        for j in range(items_this_row):
+            with cols[j]:
+                _render_family_card(families[i + j])
 
 
 def _render_family_card(family) -> None:
-    """One family card in the list view."""
+    """One family card — calm, borderless stats, gold accent."""
     people = list_people_in_family(family.id)
     entities = list_entities_in_family(family.id)
+    doc_count = 0
+    try:
+        from db.repositories import list_documents_for_family
+        doc_count = len(list_documents_for_family(family.id))
+    except Exception:
+        doc_count = 0
 
-    with st.container(border=True):
-        st.markdown(f"### {family.name}")
-        if family.notes:
-            st.caption(family.notes[:120] + ("…" if len(family.notes) > 120 else ""))
+    sub = ""
+    if family.notes:
+        sub = family.notes[:90] + ("…" if len(family.notes) > 90 else "")
 
-        col_a, col_b, col_c = st.columns(3)
-        col_a.metric("People", len(people))
-        col_b.metric("Entities", len(entities))
-        col_c.metric("Documents", 0)  # placeholder until Documents wired
+    st.markdown(
+        f"""
+        <div class="angel-fam-card">
+          <div class="angel-fam-accent"></div>
+          <div class="angel-fam-body">
+            <div class="angel-fam-name">{family.name}</div>
+            <div class="angel-fam-sub">{sub or "&nbsp;"}</div>
+            <div class="angel-fam-stats">
+              <div class="angel-fam-stat">
+                <div class="angel-fam-stat-label">People</div>
+                <div class="angel-fam-stat-value">{len(people)}</div>
+              </div>
+              <div class="angel-fam-stat">
+                <div class="angel-fam-stat-label">Entities</div>
+                <div class="angel-fam-stat-value">{len(entities)}</div>
+              </div>
+              <div class="angel-fam-stat">
+                <div class="angel-fam-stat-label">Documents</div>
+                <div class="angel-fam-stat-value">{doc_count}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
-        if st.button(
-            "Open →",
-            key=f"open_fam_{family.id}",
-            use_container_width=True,
-        ):
-            st.session_state.selected_family_id = family.id
-            st.session_state.show_family_detail = True
-            st.session_state.family_detail_section = "Overview"
-            st.rerun()
+    # Real Streamlit button, styled gold + flush via the wrapper class
+    st.markdown('<div class="angel-fam-open">', unsafe_allow_html=True)
+    if st.button("Open →", key=f"open_fam_{family.id}",
+                 use_container_width=True):
+        st.session_state.selected_family_id = family.id
+        st.session_state.show_family_detail = True
+        st.session_state.family_detail_section = "Overview"
+        st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:1.5rem;'></div>", unsafe_allow_html=True)
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -392,11 +414,9 @@ def _render_family_overview(family, family_id: int) -> None:
     relationships = list_relationships_in_family(family_id)
     total_roles = sum(len(list_roles_for_entity(e.id)) for e in entities)
 
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("People", len(people))
-    c2.metric("Entities", len(entities))
-    c3.metric("Relationships", len(relationships))
-    c4.metric("Roles", total_roles)
+    _overview_stat_strip(
+        len(people), len(entities), len(relationships), total_roles
+    )
 
     st.markdown("---")
     col_people, col_entities = st.columns(2)
@@ -436,6 +456,24 @@ def _render_family_overview(family, family_id: int) -> None:
             "beneficiary designations, stale trust amendments, gift tax "
             "exposure, planning opportunities. Powered by your local LLM."
         )
+
+
+def _overview_stat_strip(people_n, entities_n, rel_n, roles_n) -> None:
+    st.markdown(
+        f"""
+        <div class="angel-stat-strip">
+          <div class="angel-stat-cell"><div class="lbl">People</div>
+            <div class="val">{people_n}</div></div>
+          <div class="angel-stat-cell"><div class="lbl">Entities</div>
+            <div class="val">{entities_n}</div></div>
+          <div class="angel-stat-cell"><div class="lbl">Relationships</div>
+            <div class="val">{rel_n}</div></div>
+          <div class="angel-stat-cell"><div class="lbl">Roles</div>
+            <div class="val">{roles_n}</div></div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def _render_key_people_orgs(family_id: int) -> None:
@@ -483,45 +521,10 @@ def _coming_soon(
 def _render_tasks_family_scope(family_id: int) -> None:
     user = st.session_state.get("user")
     render_tasks_page(family_id, user)
-   
 
 
 def _render_family_tree_page(family_id: int) -> None:
     render_family_tree(family_id)
-    # people = list_people_in_family(family_id)
-    # relationships = list_relationships_in_family(family_id)
-
-    # st.markdown("### Family Tree")
-    # st.caption(
-    #     "Visual map of family relationships across generations. "
-    #     "Pulled from People & Relationships defined under Key People & Orgs."
-    # )
-
-    # if not people:
-    #     st.info("Add people in **Key People & Orgs → People** to see them here.")
-    #     return
-
-    # st.info(
-    #     f"🚧 Editorial family tree visualization coming in **Phase 3**. "
-    #     f"Today: {len(people)} people, {len(relationships)} relationships "
-    #     f"in this family's graph. The polished tree (like the Anderson "
-    #     f"family mockup) will land once we move past Streamlit for "
-    #     f"this page."
-    # )
-
-    # # Lightweight preview: list people grouped by deceased/living
-    # living = [p for p in people if not p.is_deceased]
-    # deceased = [p for p in people if p.is_deceased]
-
-    # col_l, col_d = st.columns(2)
-    # with col_l:
-    #     st.markdown("**Living**")
-    #     for p in living:
-    #         st.markdown(f"- {p.display_name}")
-    # with col_d:
-    #     st.markdown("**Deceased**")
-    #     for p in deceased:
-    #         st.markdown(f"- {p.display_name} ⚰️")
 
 
 def _render_org_ownership(family_id: int) -> None:
@@ -540,7 +543,6 @@ def _render_documents_family_scope(family_id: int) -> None:
 # Top-level stubs
 def _render_my_tasks_view(user) -> None:
     render_my_tasks_page(user)
-    
 
 
 def _render_partnership_circle_view(user) -> None:

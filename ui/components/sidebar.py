@@ -66,7 +66,8 @@ def get_user_chats(user):
 
 def render_sidebar(user):
     """Render sidebar with chat history"""
-    st.markdown("## 💼 FinancialQA AI")
+    from ui.theme import render_brand_header
+    render_brand_header()
     st.markdown(f"**{user.client_name}**")
     st.markdown(f"*{user.role.value.title()}*")
     st.markdown("---")

@@ -29,3 +29,4 @@ def build_ollama_llm(model: str = "llama3.2:3b", temperature: float = 0.0):  # C
         num_ctx=8192,  # Increase context window
         num_predict=512,
     )
+

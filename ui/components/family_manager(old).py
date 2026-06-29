@@ -1,14 +1,12 @@
 """
 Family / People / Entities / Roles management.
 
-Pass 3 visual refresh: the row renderers now use a calmer treatment —
-light row panels separated by hairline dividers instead of heavy bordered
-cards, and masked SSN/Tax-ID values render as a subtle gold chip instead
-of a clunky code block. All edit / delete / confirm logic is unchanged.
+Originally rendered a Families tab with sub-tabs (Step 2 and 3a). Now
+its sub-renderers are imported by advisor_shell.py and used as standalone
+pages in the sidebar workspace.
 
-Its sub-renderers are imported by advisor_shell.py and used as standalone
-pages in the sidebar workspace. render_family_manager() is kept for
-backward compatibility with the original tab-based layout.
+The render_family_manager() function below is kept for backward
+compatibility with the original tab-based layout.
 """
 
 from __future__ import annotations
@@ -97,70 +95,6 @@ ROLE_TYPES = [
     "executor",
     "guardian",
 ]
-
-
-# ---------------------------------------------------------------------------
-# Pass 3 — calm styling
-# ---------------------------------------------------------------------------
-
-_FM_CSS = """
-<style>
-/* Calm list rows for People / Entities / Relationships / Roles */
-.angel-row {
-    padding: 14px 16px 12px;
-    border-bottom: 1px solid rgba(201,169,97,0.10);
-}
-.angel-row:hover { background: rgba(201,169,97,0.035); }
-.angel-row-name {
-    font-family: 'Inter', sans-serif;
-    font-weight: 600; font-size: 1rem; color: #F8F4EC;
-    display: flex; align-items: center; gap: 8px;
-}
-.angel-row-meta {
-    color: #9AA8C0; font-size: 0.82rem; margin-top: 3px;
-}
-.angel-id-chip {
-    display: inline-block;
-    font-family: 'JetBrains Mono', 'Courier New', monospace;
-    font-size: 0.8rem; color: #D8BC7E;
-    background: rgba(201,169,97,0.08);
-    padding: 4px 10px; border-radius: 6px; letter-spacing: 0.04em;
-}
-.angel-id-chip.empty { color: #6E7C95; background: rgba(110,124,149,0.10); }
-.angel-section-sub {
-    color: #9AA8C0; font-size: 0.9rem; margin: -2px 0 14px;
-}
-/* Tighten the action buttons in row layouts to read as secondary */
-.angel-row-actions div.stButton > button {
-    background: transparent;
-    border: 1px solid rgba(201,169,97,0.30);
-    color: #C9A961;
-    font-weight: 600; font-size: 0.82rem;
-    padding: 5px 10px;
-}
-.angel-row-actions div.stButton > button:hover {
-    background: rgba(201,169,97,0.10);
-    color: #D8BC7E;
-    transform: none; box-shadow: none;
-}
-</style>
-"""
-
-
-def _inject_fm_css() -> None:
-    if not st.session_state.get("_fm_css_injected"):
-        st.markdown(_FM_CSS, unsafe_allow_html=True)
-        # Re-inject every render is fine/cheap; flag avoids duplicate <style>
-        # within a single run only — Streamlit reruns reset session anyway.
-    st.markdown(_FM_CSS, unsafe_allow_html=True)
-
-
-def _esc(s) -> str:
-    s = "" if s is None else str(s)
-    return (
-        s.replace("&", "&amp;").replace("<", "&lt;")
-        .replace(">", "&gt;").replace('"', "&quot;")
-    )
 
 
 # ===========================================================================
@@ -275,14 +209,9 @@ def _render_family_picker(advisor_db_id: int, families: list[Family]) -> None:
 # ===========================================================================
 
 def _render_people_tab(family_id: int) -> None:
-    _inject_fm_css()
     people = list_people_in_family(family_id)
 
-    st.markdown("### People")
-    st.markdown(
-        "<div class='angel-section-sub'>Family members across this household.</div>",
-        unsafe_allow_html=True,
-    )
+    st.subheader("People")
 
     if people:
         for person in people:
@@ -323,7 +252,7 @@ def _render_people_tab(family_id: int) -> None:
                         st.session_state.confirm_delete_person_id = None
                         st.rerun()
 
-    st.markdown("<div style='height:1rem;'></div>", unsafe_allow_html=True)
+    st.markdown("---")
     editing_id = st.session_state.get("editing_person_id")
     if editing_id is not None:
         editing_person = get_person(editing_id)
@@ -338,57 +267,41 @@ def _render_people_tab(family_id: int) -> None:
 
 
 def _render_person_card(person: Person) -> None:
-    """Calm row: name + meta on the left (HTML), SSN reveal + actions right."""
-    name = _esc(person.display_name)
-    if person.is_deceased:
-        name += " ⚰️"
+    with st.container(border=True):
+        col_info, col_ssn, col_actions = st.columns([3, 2, 2])
 
-    meta_bits = []
-    if person.dob:
-        meta_bits.append(f"DOB {person.dob.isoformat()}")
-    if person.email:
-        meta_bits.append(_esc(person.email))
-    if person.phone:
-        meta_bits.append(_esc(person.phone))
-    meta = " · ".join(meta_bits)
+        with col_info:
+            name = person.display_name
+            if person.is_deceased:
+                name += " ⚰️"
+            st.markdown(f"**{name}**")
+            bits = []
+            if person.dob:
+                bits.append(f"DOB: {person.dob.isoformat()}")
+            if person.email:
+                bits.append(person.email)
+            if person.phone:
+                bits.append(person.phone)
+            if bits:
+                st.caption(" · ".join(bits))
 
-    col_info, col_ssn, col_actions = st.columns([4, 2, 2])
+        with col_ssn:
+            show_key = f"show_ssn_{person.id}"
+            show = st.toggle("Show SSN", key=show_key, value=False)
+            if person.ssn_encrypted is None:
+                st.code("— no SSN on file —")
+            elif show:
+                st.code(person.ssn or "—")
+            else:
+                st.code(_mask_id(person.ssn))
 
-    with col_info:
-        st.markdown(
-            f"""
-            <div class="angel-row" style="border:none;padding-left:0;">
-              <div class="angel-row-name">{name}</div>
-              <div class="angel-row-meta">{meta or "&nbsp;"}</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    with col_ssn:
-        show = st.toggle("Show SSN", key=f"show_ssn_{person.id}", value=False)
-        if person.ssn_encrypted is None:
-            chip = '<span class="angel-id-chip empty">no SSN on file</span>'
-        elif show:
-            chip = f'<span class="angel-id-chip">{_esc(person.ssn or "—")}</span>'
-        else:
-            chip = f'<span class="angel-id-chip">{_mask_id(person.ssn)}</span>'
-        st.markdown(chip, unsafe_allow_html=True)
-
-    with col_actions:
-        st.markdown('<div class="angel-row-actions">', unsafe_allow_html=True)
-        if st.button("Edit", key=f"edit_{person.id}", use_container_width=True):
-            st.session_state.editing_person_id = person.id
-            st.rerun()
-        if st.button("Delete", key=f"del_{person.id}", use_container_width=True):
-            st.session_state.confirm_delete_person_id = person.id
-            st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    st.markdown(
-        "<div style='border-bottom:1px solid rgba(201,169,97,0.10);'></div>",
-        unsafe_allow_html=True,
-    )
+        with col_actions:
+            if st.button("Edit", key=f"edit_{person.id}", use_container_width=True):
+                st.session_state.editing_person_id = person.id
+                st.rerun()
+            if st.button("Delete", key=f"del_{person.id}", use_container_width=True):
+                st.session_state.confirm_delete_person_id = person.id
+                st.rerun()
 
 
 def _render_person_form(family_id: int, existing: Optional[Person]) -> None:
@@ -494,11 +407,10 @@ def _render_person_form(family_id: int, existing: Optional[Person]) -> None:
 # ===========================================================================
 
 def _render_relationships_tab(family_id: int) -> None:
-    _inject_fm_css()
     people = list_people_in_family(family_id)
     relationships = list_relationships_in_family(family_id)
 
-    st.markdown("### Relationships")
+    st.subheader("Relationships")
 
     if len(people) < 2:
         st.info("You need at least two people in the family to define a relationship.")
@@ -512,41 +424,25 @@ def _render_relationships_tab(family_id: int) -> None:
             b = person_by_id.get(rel.person_b_id)
             if not a or not b:
                 continue
-            col_text, col_action = st.columns([6, 1])
-            with col_text:
-                sub = []
-                if rel.start_date:
-                    sub.append(f"since {rel.start_date.isoformat()}")
-                if rel.notes:
-                    sub.append(_esc(rel.notes))
-                sub_html = (
-                    f"<div class='angel-row-meta'>{' · '.join(sub)}</div>" if sub else ""
-                )
-                st.markdown(
-                    f"""
-                    <div class="angel-row" style="border:none;padding-left:0;">
-                      <div class="angel-row-name" style="font-weight:500;">
-                        {_format_relationship_html(a, b, rel.relationship_type)}
-                      </div>
-                      {sub_html}
-                    </div>
-                    """,
-                    unsafe_allow_html=True,
-                )
-            with col_action:
-                st.markdown('<div class="angel-row-actions">', unsafe_allow_html=True)
-                if st.button("Delete", key=f"del_rel_{rel.id}", use_container_width=True):
-                    delete_relationship(rel.id)
-                    st.rerun()
-                st.markdown("</div>", unsafe_allow_html=True)
-            st.markdown(
-                "<div style='border-bottom:1px solid rgba(201,169,97,0.10);'></div>",
-                unsafe_allow_html=True,
-            )
+            with st.container(border=True):
+                col_text, col_action = st.columns([5, 1])
+                with col_text:
+                    st.markdown(_format_relationship(a, b, rel.relationship_type))
+                    sub = []
+                    if rel.start_date:
+                        sub.append(f"since {rel.start_date.isoformat()}")
+                    if rel.notes:
+                        sub.append(rel.notes)
+                    if sub:
+                        st.caption(" · ".join(sub))
+                with col_action:
+                    if st.button("Delete", key=f"del_rel_{rel.id}", use_container_width=True):
+                        delete_relationship(rel.id)
+                        st.rerun()
     else:
         st.info("No relationships defined yet.")
 
-    st.markdown("<div style='height:1rem;'></div>", unsafe_allow_html=True)
+    st.markdown("---")
     with st.expander("➕ Add Relationship", expanded=not relationships):
         person_options = {p.display_name: p.id for p in people}
         with st.form("new_relationship_form", clear_on_submit=True):
@@ -587,19 +483,14 @@ def _render_relationships_tab(family_id: int) -> None:
 
 
 # ===========================================================================
-# Entities tab
+# Entities tab (Step 3a)
 # ===========================================================================
 
 def _render_entities_tab(family_id: int) -> None:
-    _inject_fm_css()
     entities = list_entities_in_family(family_id)
 
-    st.markdown("### Entities")
-    st.markdown(
-        "<div class='angel-section-sub'>Trusts, LLCs, partnerships, "
-        "corporations, foundations, and more.</div>",
-        unsafe_allow_html=True,
-    )
+    st.subheader("Entities")
+    st.caption("Trusts, LLCs, partnerships, corporations, foundations, etc.")
 
     if entities:
         for entity in entities:
@@ -640,7 +531,7 @@ def _render_entities_tab(family_id: int) -> None:
                         st.session_state.confirm_delete_entity_id = None
                         st.rerun()
 
-    st.markdown("<div style='height:1rem;'></div>", unsafe_allow_html=True)
+    st.markdown("---")
     editing_id = st.session_state.get("editing_entity_id")
     if editing_id is not None:
         editing_entity = get_entity(editing_id)
@@ -655,57 +546,40 @@ def _render_entities_tab(family_id: int) -> None:
 
 
 def _render_entity_card(entity: Entity) -> None:
-    icon = _entity_icon(entity.entity_type)
-    name = f"{icon}  {_esc(entity.name)}"
+    with st.container(border=True):
+        col_info, col_id, col_actions = st.columns([3, 2, 2])
 
-    bits = [_esc(entity.entity_type)]
-    if entity.sub_type:
-        bits.append(_esc(entity.sub_type))
-    if entity.jurisdiction:
-        bits.append(_esc(entity.jurisdiction))
-    if entity.formation_date:
-        bits.append(f"formed {entity.formation_date.isoformat()}")
-    if entity.termination_date:
-        bits.append(f"terminated {entity.termination_date.isoformat()}")
-    meta = " · ".join(bits)
+        with col_info:
+            icon = _entity_icon(entity.entity_type)
+            st.markdown(f"{icon}  **{entity.name}**")
+            bits = [entity.entity_type]
+            if entity.sub_type:
+                bits.append(entity.sub_type)
+            if entity.jurisdiction:
+                bits.append(entity.jurisdiction)
+            if entity.formation_date:
+                bits.append(f"formed {entity.formation_date.isoformat()}")
+            if entity.termination_date:
+                bits.append(f"terminated {entity.termination_date.isoformat()}")
+            st.caption(" · ".join(bits))
 
-    col_info, col_id, col_actions = st.columns([4, 2, 2])
+        with col_id:
+            show_key = f"show_taxid_{entity.id}"
+            show = st.toggle("Show Tax ID", key=show_key, value=False)
+            if entity.tax_id_encrypted is None:
+                st.code("— no Tax ID on file —")
+            elif show:
+                st.code(entity.tax_id or "—")
+            else:
+                st.code(_mask_id(entity.tax_id))
 
-    with col_info:
-        st.markdown(
-            f"""
-            <div class="angel-row" style="border:none;padding-left:0;">
-              <div class="angel-row-name">{name}</div>
-              <div class="angel-row-meta">{meta or "&nbsp;"}</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    with col_id:
-        show = st.toggle("Show Tax ID", key=f"show_taxid_{entity.id}", value=False)
-        if entity.tax_id_encrypted is None:
-            chip = '<span class="angel-id-chip empty">no Tax ID on file</span>'
-        elif show:
-            chip = f'<span class="angel-id-chip">{_esc(entity.tax_id or "—")}</span>'
-        else:
-            chip = f'<span class="angel-id-chip">{_mask_id(entity.tax_id)}</span>'
-        st.markdown(chip, unsafe_allow_html=True)
-
-    with col_actions:
-        st.markdown('<div class="angel-row-actions">', unsafe_allow_html=True)
-        if st.button("Edit", key=f"edit_ent_{entity.id}", use_container_width=True):
-            st.session_state.editing_entity_id = entity.id
-            st.rerun()
-        if st.button("Delete", key=f"del_ent_{entity.id}", use_container_width=True):
-            st.session_state.confirm_delete_entity_id = entity.id
-            st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    st.markdown(
-        "<div style='border-bottom:1px solid rgba(201,169,97,0.10);'></div>",
-        unsafe_allow_html=True,
-    )
+        with col_actions:
+            if st.button("Edit", key=f"edit_ent_{entity.id}", use_container_width=True):
+                st.session_state.editing_entity_id = entity.id
+                st.rerun()
+            if st.button("Delete", key=f"del_ent_{entity.id}", use_container_width=True):
+                st.session_state.confirm_delete_entity_id = entity.id
+                st.rerun()
 
 
 def _render_entity_form(family_id: int, existing: Optional[Entity]) -> None:
@@ -816,20 +690,17 @@ def _render_entity_form(family_id: int, existing: Optional[Entity]) -> None:
 
 
 # ===========================================================================
-# Roles tab
+# Roles tab (Step 3a)
 # ===========================================================================
 
 def _render_roles_tab(family_id: int) -> None:
-    _inject_fm_css()
     people = list_people_in_family(family_id)
     entities = list_entities_in_family(family_id)
 
-    st.markdown("### Roles")
-    st.markdown(
-        "<div class='angel-section-sub'>Who plays what role in each entity. "
-        "A person can hold multiple roles in the same entity "
-        "(e.g. grantor + trustee + beneficiary).</div>",
-        unsafe_allow_html=True,
+    st.subheader("Roles")
+    st.caption(
+        "Who plays what role in each entity. A person can hold multiple "
+        "roles in the same entity (e.g. grantor + trustee + beneficiary)."
     )
 
     if not people or not entities:
@@ -843,72 +714,43 @@ def _render_roles_tab(family_id: int) -> None:
 
     for entity in entities:
         roles = list_roles_for_entity(entity.id)
-        icon = _entity_icon(entity.entity_type)
-        sub = entity.sub_type or entity.entity_type
-        sub_full = sub + (f" · {entity.jurisdiction}" if entity.jurisdiction else "")
-        st.markdown(
-            f"""
-            <div style="margin-top:1.2rem;">
-              <div style="font-family:'Playfair Display',serif;font-size:1.15rem;
-                          color:#F8F4EC;">{icon}  {_esc(entity.name)}</div>
-              <div class="angel-row-meta">{_esc(sub_full)}</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        with st.container(border=True):
+            icon = _entity_icon(entity.entity_type)
+            sub = entity.sub_type or entity.entity_type
+            st.markdown(f"### {icon}  {entity.name}")
+            st.caption(f"{sub}" + (f" · {entity.jurisdiction}" if entity.jurisdiction else ""))
 
-        if roles:
-            for role in roles:
-                person = person_by_id.get(role.person_id)
-                if person is None:
-                    continue
-                col_role, col_action = st.columns([6, 1])
-                with col_role:
-                    bits = [
-                        f"<b>{_esc(person.display_name)}</b>",
-                        f"<span style='color:#C9A961;'>{_esc(role.role_type)}</span>",
-                    ]
-                    if role.interest_percentage is not None:
-                        bits.append(f"{role.interest_percentage:.2f}%")
-                    if role.start_date:
-                        bits.append(f"since {role.start_date.isoformat()}")
-                    if role.end_date:
-                        bits.append(f"until {role.end_date.isoformat()}")
-                    if not role.is_active:
-                        bits.append("⚠️ inactive")
-                    note_html = (
-                        f"<div class='angel-row-meta'>{_esc(role.notes)}</div>"
-                        if role.notes else ""
-                    )
-                    st.markdown(
-                        f"""
-                        <div class="angel-row" style="border:none;padding-left:0;">
-                          <div class="angel-row-meta" style="font-size:0.92rem;color:#E9ECF4;">
-                            {" · ".join(bits)}
-                          </div>
-                          {note_html}
-                        </div>
-                        """,
-                        unsafe_allow_html=True,
-                    )
-                with col_action:
-                    st.markdown('<div class="angel-row-actions">', unsafe_allow_html=True)
-                    if st.button("Delete", key=f"del_role_{role.id}", use_container_width=True):
-                        delete_role(role.id)
-                        st.rerun()
-                    st.markdown("</div>", unsafe_allow_html=True)
-        else:
-            st.markdown(
-                "<div class='angel-row-meta' style='padding:6px 0 4px;'>"
-                "<em>No roles assigned yet.</em></div>",
-                unsafe_allow_html=True,
-            )
-        st.markdown(
-            "<div style='border-bottom:1px solid rgba(201,169,97,0.10);'></div>",
-            unsafe_allow_html=True,
-        )
+            if roles:
+                for role in roles:
+                    person = person_by_id.get(role.person_id)
+                    if person is None:
+                        continue
+                    col_role, col_action = st.columns([6, 1])
+                    with col_role:
+                        bits = [f"**{person.display_name}**", f"_{role.role_type}_"]
+                        if role.interest_percentage is not None:
+                            bits.append(f"{role.interest_percentage:.2f}%")
+                        if role.start_date:
+                            bits.append(f"since {role.start_date.isoformat()}")
+                        if role.end_date:
+                            bits.append(f"until {role.end_date.isoformat()}")
+                        if not role.is_active:
+                            bits.append("⚠️ inactive")
+                        st.markdown(" · ".join(bits))
+                        if role.notes:
+                            st.caption(role.notes)
+                    with col_action:
+                        if st.button(
+                            "Delete",
+                            key=f"del_role_{role.id}",
+                            use_container_width=True,
+                        ):
+                            delete_role(role.id)
+                            st.rerun()
+            else:
+                st.caption("_No roles assigned yet._")
 
-    st.markdown("<div style='height:1rem;'></div>", unsafe_allow_html=True)
+    st.markdown("---")
     with st.expander("➕ Add Role", expanded=False):
         person_options = {p.display_name: p.id for p in people}
         entity_options = {e.name: e.id for e in entities}
@@ -1022,20 +864,20 @@ def _mask_id(value: Optional[str]) -> str:
     return "XXX-XX-XXXX"
 
 
-def _format_relationship_html(a: Person, b: Person, rel_type: str) -> str:
-    a_name = _esc(a.display_name)
-    b_name = _esc(b.display_name)
+def _format_relationship(a: Person, b: Person, rel_type: str) -> str:
+    a_name = a.display_name
+    b_name = b.display_name
     if rel_type == "spouse":
-        return f"<b>{a_name}</b>  ↔  <b>{b_name}</b> · spouses"
+        return f"**{a_name}**  ↔  **{b_name}**  · spouses"
     if rel_type == "ex_spouse":
-        return f"<b>{a_name}</b>  ↔  <b>{b_name}</b> · former spouses"
+        return f"**{a_name}**  ↔  **{b_name}**  · former spouses"
     if rel_type == "parent_of":
-        return f"<b>{a_name}</b>  →  <b>{b_name}</b> · parent of"
+        return f"**{a_name}**  →  **{b_name}**  · parent of"
     if rel_type == "guardian_of":
-        return f"<b>{a_name}</b>  →  <b>{b_name}</b> · guardian of"
+        return f"**{a_name}**  →  **{b_name}**  · guardian of"
     if rel_type == "sibling":
-        return f"<b>{a_name}</b>  ↔  <b>{b_name}</b> · siblings"
-    return f"<b>{a_name}</b>  ↔  <b>{b_name}</b> · {_esc(rel_type)}"
+        return f"**{a_name}**  ↔  **{b_name}**  · siblings"
+    return f"**{a_name}**  ↔  **{b_name}**  · {rel_type}"
 
 
 def _entity_icon(entity_type: str) -> str:

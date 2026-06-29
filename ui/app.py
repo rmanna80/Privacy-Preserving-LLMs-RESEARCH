@@ -21,8 +21,8 @@ from ui.components.family_manager import render_family_manager
 from ui.components.advisor_shell import render_advisor_shell
 
 
-APP_TITLE = "FinancialQA AI"
-APP_SUBTITLE = "Privacy-Preserving Financial Assistant"
+APP_TITLE = "Angel"
+APP_SUBTITLE = "Database for Family Wealth"
 SHOW_DEMO_ACCOUNTS = False
 
 
@@ -87,29 +87,27 @@ def _save_chat_history_for_context(user, selected_client_username: Optional[str]
 
 
 def login_page() -> None:
-    st.title(APP_TITLE)
-    st.subheader(APP_SUBTITLE)
-    st.caption("100% local processing")
+    from ui.theme import inject_theme, render_login_brand
+    inject_theme()
 
-    st.markdown("---")
+    # Center the login in the middle third of the page
+    left, center, right = st.columns([1, 1.3, 1])
+    with center:
+        render_login_brand()
+        st.markdown("<div style='height:0.5rem;'></div>", unsafe_allow_html=True)
 
-    username = st.text_input("Email", key="login_username").strip()
-    password = st.text_input("Password", type="password", key="login_password")
+        username = st.text_input("Email", key="login_username").strip()
+        password = st.text_input("Password", type="password", key="login_password")
 
-    auth = AuthSystem()
+        auth = AuthSystem()
 
-    col1, col2 = st.columns(2)
-
-    with col1:
-        if st.button("Sign In", use_container_width=True):
+        if st.button("Sign In", use_container_width=True, type="primary"):
             if not username or not password:
                 st.error("Please enter both email and password.")
                 return
-
             if auth.is_locked_out(username):
                 st.error("Too many failed attempts. Please wait 5 minutes.")
                 return
-
             user = auth.authenticate(username, password)
             if user:
                 st.session_state.authenticated = True
@@ -123,23 +121,13 @@ def login_page() -> None:
             else:
                 st.error("Invalid credentials.")
 
-    with col2:
-        if SHOW_DEMO_ACCOUNTS and st.button("Demo Accounts", use_container_width=True):
-            st.info(
-                """
-**Super Admin**
-- admin@demo.com
-
-**Advisors**
-- advisor.adam@demo.com
-- advisor.jake@demo.com
-
-**Clients**
-- john.smith@demo.com
-- sally.smith@demo.com
-- peter.professor@demo.com
-"""
-            )
+        if SHOW_DEMO_ACCOUNTS:
+            with st.expander("Demo Accounts"):
+                st.markdown(
+                    "**Super Admin** — admin@demo.com  \n"
+                    "**Advisors** — advisor.adam@demo.com · advisor.jake@demo.com  \n"
+                    "**Clients** — john.smith@demo.com · sally.smith@demo.com"
+                )
 
 
 def initialize_qa_system(
@@ -233,6 +221,8 @@ def main_app() -> None:
         return
 
     # Admin only — original tab layout.
+    from ui.theme import inject_theme, render_brand_header
+    inject_theme()
     with st.sidebar:
         render_sidebar(user)
         st.markdown("---")
