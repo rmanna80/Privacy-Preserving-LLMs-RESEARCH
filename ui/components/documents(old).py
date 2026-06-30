@@ -1,17 +1,30 @@
 """
-ui/components/documents.py — Documents page for an advisor.
+ui/components/documents.py — Documents page for an advisor (sub-phase 4a).
 
-Pass 3 visual refresh: document rows use the same calm treatment as the
-People / Entities pages — hairline-separated rows instead of heavy
-bordered cards, cleaner inline metadata, and outlined secondary action
-buttons. Upload form, dedup, disk/DB write, and reindex logic unchanged.
+Per-family document upload, categorization, and recent-uploads list.
 
-Bug fix folded in (Pass 3): the post-upload reindex now bumps the
-`family_index_version` key that chat_bridge.get_or_build_qa actually
-reads. Previously this wrote `family_index_versions` (plural), which the
-bridge never looked at — so uploading a doc and immediately asking Angel
-about it wouldn't see the new document until a manual reload. Now the
-version bump reaches the chat.
+Sub-phase 4a scope (intentionally narrow):
+  - Upload one PDF at a time
+  - Pick category (5 options) + doc type
+  - Optional link to a person or entity in the family
+  - File hash dedup (catches re-uploads of the same file)
+  - File saved to disk under data/advisors/<advisor>/families/<family_id>/
+  - Document row created in wealth.db
+  - Show a simple list of uploaded docs grouped by category
+
+NOT in 4a (coming in 4b/4c/4d):
+  - Chroma reindex on upload (so chat won't see new uploads yet)
+  - PDF viewer
+  - Edit / archive UI
+  - Subfolders
+  - Reminder cadences
+  - Client portal documents view
+
+Why we save to a per-family folder rather than per-client:
+  Family is the right scope. The existing per-client folders from the
+  legacy RAG pipeline still work for the old chat path; the new path
+  uses family folders, which the upcoming family-scoped chat (sub-phase
+  4c) will use too.
 """
 
 from __future__ import annotations
@@ -28,6 +41,7 @@ from db.repositories import (
     list_entities_in_family,
     get_family,
     ensure_db_user,
+    # Document layer (newly added)
     DOCUMENT_CATEGORIES,
     CATEGORY_LABELS,
     DOC_TYPES_BY_CATEGORY,
@@ -42,58 +56,6 @@ from db.repositories import (
 
 
 # ─────────────────────────────────────────────────────────────────────
-# Pass 3 — calm styling (shared visual language with family_manager)
-# ─────────────────────────────────────────────────────────────────────
-
-_DOC_CSS = """
-<style>
-.angel-doc-row { padding: 14px 16px 12px; }
-.angel-doc-name {
-    font-family: 'Inter', sans-serif;
-    font-weight: 600; font-size: 1rem; color: #F8F4EC;
-}
-.angel-doc-meta { color: #9AA8C0; font-size: 0.82rem; margin-top: 3px; }
-.angel-doc-chip {
-    display: inline-block; font-size: 0.74rem; font-weight: 600;
-    letter-spacing: 0.04em; padding: 2px 9px; border-radius: 999px;
-    margin-right: 6px;
-}
-.angel-doc-chip.cat {
-    color: #D8BC7E; background: rgba(201,169,97,0.10);
-}
-.angel-doc-chip.indexed {
-    color: #7FB69A; background: rgba(127,182,154,0.12);
-}
-.angel-doc-chip.pending {
-    color: #C9A961; background: rgba(201,169,97,0.10);
-}
-.angel-doc-actions div.stButton > button {
-    background: transparent;
-    border: 1px solid rgba(201,169,97,0.30);
-    color: #C9A961; font-weight: 600; font-size: 0.8rem;
-    padding: 5px 10px;
-}
-.angel-doc-actions div.stButton > button:hover {
-    background: rgba(201,169,97,0.10); color: #D8BC7E;
-    transform: none; box-shadow: none;
-}
-</style>
-"""
-
-
-def _inject_doc_css() -> None:
-    st.markdown(_DOC_CSS, unsafe_allow_html=True)
-
-
-def _esc(s) -> str:
-    s = "" if s is None else str(s)
-    return (
-        s.replace("&", "&amp;").replace("<", "&lt;")
-        .replace(">", "&gt;").replace('"', "&quot;")
-    )
-
-
-# ─────────────────────────────────────────────────────────────────────
 # Path helpers
 # ─────────────────────────────────────────────────────────────────────
 
@@ -105,7 +67,11 @@ def _family_docs_dir(advisor_username: str, family_id: int) -> Path:
 
 
 def _safe_filename(original: str) -> str:
-    """Make a filename safe for the filesystem."""
+    """Make a filename safe for the filesystem.
+
+    We don't want spaces, slashes, colons, etc. Replace anything sketchy
+    with underscores. Preserve the extension.
+    """
     name = original
     for ch in [" ", "/", "\\", ":", "*", "?", "\"", "<", ">", "|"]:
         name = name.replace(ch, "_")
@@ -117,7 +83,6 @@ def _safe_filename(original: str) -> str:
 # ─────────────────────────────────────────────────────────────────────
 
 def render_documents_page(family_id: int, user) -> None:
-    _inject_doc_css()
     family = get_family(family_id)
     if family is None:
         st.error("Family not found.")
@@ -126,11 +91,10 @@ def render_documents_page(family_id: int, user) -> None:
     advisor_db_id = ensure_db_user(user)
 
     st.markdown("### Documents")
-    st.markdown(
-        "<div style='color:#9AA8C0;font-size:0.9rem;margin:-2px 0 14px;'>"
+    st.caption(
         "Every document tied to this family — categorized, hashed, and "
-        "ready for the AI to query.</div>",
-        unsafe_allow_html=True,
+        "ready for the AI to query (chat integration arrives in the "
+        "next phase)."
     )
 
     # ---- Upload form ----
@@ -165,7 +129,7 @@ def render_documents_page(family_id: int, user) -> None:
             else:
                 for d in docs:
                     _render_doc_row_detailed(d, family_id)
-
+    
     # ── Extraction panel (opens when an Extractions button is clicked) ──
     extraction_doc_id = st.session_state.get("extraction_doc_id")
     if extraction_doc_id is not None:
@@ -178,7 +142,6 @@ def render_documents_page(family_id: int, user) -> None:
         st.markdown("---")
         from ui.components.promotion_panel import render_promotion_panel
         render_promotion_panel(promotion_doc_id, user)
-
 
 # ─────────────────────────────────────────────────────────────────────
 # Upload form
@@ -362,6 +325,24 @@ def _process_upload(
         f"_{CATEGORY_LABELS[category]}_."
     )
 
+    # Trigger reindex so the chat immediately picks up this new doc
+    # with st.spinner("Indexing for AI chat…"):
+    #     try:
+    #         from ai_core.family_qa import reindex_family
+    #         reindex_family(family_id, verbose=False)
+    #         # Invalidate the cached QA system so chat reloads with the new index
+    #         if st.session_state.get("qa_owner") == f"family::{family_id}":
+    #             st.session_state.qa_system = None
+    #             st.session_state.qa_owner = None
+    #         st.caption(
+    #             f"🤖 Indexed for AI — ask Angel about this document in Chat History."
+    #         )
+    #     except Exception as e:
+    #         st.warning(
+    #             f"Document saved, but AI indexing failed: {e}. "
+    #             f"Chat may not see this document until reindex succeeds."
+    #         )
+
     with st.spinner("Indexing for AI chat…"):
         try:
             # Release the cached QA system FIRST — it holds open Chroma
@@ -371,15 +352,9 @@ def _process_upload(
 
             from ai_core.family_qa import reindex_family
             reindex_family(family_id, verbose=False)
-
-            # Bump the per-family index version that chat_bridge reads.
-            # NOTE: the key is SINGULAR `family_index_version` — that is the
-            # dict get_or_build_qa() looks at. (Previously this wrote the
-            # plural `family_index_versions`, which the bridge ignored, so
-            # the chat never saw freshly-uploaded docs until a reload.)
-            versions = st.session_state.setdefault("family_index_version", {})
+            # Invalidate the cached QA system so chat reloads with the new index
+            versions = st.session_state.setdefault("family_index_versions", {})
             versions[family_id] = versions.get(family_id, 0) + 1
-
             st.caption(
                 "🤖 Indexed for AI — ask Angel about this document in Chat History."
             )
@@ -393,100 +368,57 @@ def _process_upload(
 
 
 # ─────────────────────────────────────────────────────────────────────
-# Document rows — calm treatment
+# Document rows
 # ─────────────────────────────────────────────────────────────────────
 
 def _render_doc_row_compact(doc) -> None:
     """Single-line row used in the Recent Uploads section."""
-    uploaded_at = doc.uploaded_at.strftime("%Y-%m-%d %H:%M")
-    size_kb = (doc.file_size_bytes or 0) / 1024
-    meta_bits = [f"Uploaded {uploaded_at}", f"{size_kb:.0f} KB"]
-    if doc.doc_year:
-        meta_bits.append(f"Year {doc.doc_year}")
-
-    st.markdown(
-        f"""
-        <div class="angel-doc-row">
-          <div class="angel-doc-name">{_esc(doc.original_filename)}</div>
-          <div class="angel-doc-meta">
-            <span class="angel-doc-chip cat">{_esc(category_label(doc.category))}</span>
-            {_esc(doc.doc_type)} · {" · ".join(_esc(b) for b in meta_bits)}
-          </div>
-        </div>
-        <div style='border-bottom:1px solid rgba(201,169,97,0.10);'></div>
-        """,
-        unsafe_allow_html=True,
-    )
+    with st.container(border=True):
+        c1, c2, c3 = st.columns([4, 3, 2])
+        with c1:
+            st.markdown(f"**{doc.original_filename}**")
+            st.caption(f"{category_label(doc.category)} · {doc.doc_type}")
+        with c2:
+            uploaded_at = doc.uploaded_at.strftime("%Y-%m-%d %H:%M")
+            st.caption(f"Uploaded {uploaded_at}")
+            if doc.doc_year:
+                st.caption(f"Doc year: {doc.doc_year}")
+        with c3:
+            size_kb = (doc.file_size_bytes or 0) / 1024
+            st.caption(f"{size_kb:.0f} KB")
 
 
 def _render_doc_row_detailed(doc, family_id: int) -> None:
-    """Per-category row, richer with extraction + archive controls."""
-    uploaded_at = doc.uploaded_at.strftime("%Y-%m-%d %H:%M")
-
-    # Build the meta line
-    sub_bits = [_esc(doc.doc_type)]
-    if doc.doc_year:
-        sub_bits.append(f"Year {doc.doc_year}")
-    sub_bits.append(f"📅 {uploaded_at}")
-
-    link_bits = []
-    if doc.person_id:
-        from db.repositories import get_person
-        p = get_person(doc.person_id)
-        if p:
-            link_bits.append(f"👥 {_esc(p.display_name)}")
-    if doc.entity_id:
-        from db.repositories import get_entity
-        e = get_entity(doc.entity_id)
-        if e:
-            link_bits.append(f"🏛️ {_esc(e.name)}")
-
-    note_str = ""
-    if doc.notes:
-        note_str = _esc(doc.notes[:80] + ("…" if len(doc.notes) > 80 else ""))
-
-    indexed = bool(doc.indexed_in_vectorstore)
-    index_chip = (
-        '<span class="angel-doc-chip indexed">✓ Indexed</span>'
-        if indexed
-        else '<span class="angel-doc-chip pending">⏳ Pending</span>'
-    )
-
-    meta_line = " · ".join(sub_bits)
-    if link_bits:
-        meta_line += " · " + " · ".join(link_bits)
-    if note_str:
-        meta_line += f" · {note_str}"
-
-    col_info, col_actions = st.columns([5, 2])
-
-    with col_info:
-        st.markdown(
-            f"""
-            <div class="angel-doc-row">
-              <div class="angel-doc-name">{_esc(doc.original_filename)}</div>
-              <div class="angel-doc-meta">{index_chip}{meta_line}</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    with col_actions:
-        st.markdown('<div class="angel-doc-actions">', unsafe_allow_html=True)
-        bcol1, bcol2 = st.columns(2)
-        with bcol1:
-            if st.button("✨ Extract", key=f"extract_doc_{doc.id}",
-                         use_container_width=True):
+    """Per-category row, slightly richer with archive control."""
+    with st.container(border=True):
+        c1, c2, c3 = st.columns([5, 3, 2])
+        with c1:
+            st.markdown(f"**{doc.original_filename}**")
+            sub_bits = [doc.doc_type]
+            if doc.doc_year:
+                sub_bits.append(f"Year {doc.doc_year}")
+            if doc.notes:
+                sub_bits.append(doc.notes[:60] + ("…" if len(doc.notes) > 60 else ""))
+            st.caption(" · ".join(sub_bits))
+        with c2:
+            uploaded_at = doc.uploaded_at.strftime("%Y-%m-%d %H:%M")
+            st.caption(f"📅 {uploaded_at}")
+            if doc.person_id:
+                from db.repositories import get_person
+                p = get_person(doc.person_id)
+                if p:
+                    st.caption(f"👥 {p.display_name}")
+            if doc.entity_id:
+                from db.repositories import get_entity
+                e = get_entity(doc.entity_id)
+                if e:
+                    st.caption(f"🏛️ {e.name}")
+        with c3:
+            indexed_emoji = "✅" if doc.indexed_in_vectorstore else "⏳"
+            st.caption(f"Indexed: {indexed_emoji}")
+            if st.button("✨ Extractions", key=f"extract_doc_{doc.id}", use_container_width=True):
                 st.session_state.extraction_doc_id = doc.id
                 st.rerun()
-        with bcol2:
-            if st.button("Archive", key=f"archive_doc_{doc.id}",
-                         use_container_width=True):
+            if st.button("Archive", key=f"archive_doc_{doc.id}", use_container_width=True):
                 archive_document(doc.id)
                 st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    st.markdown(
-        "<div style='border-bottom:1px solid rgba(201,169,97,0.10);'></div>",
-        unsafe_allow_html=True,
-    )
